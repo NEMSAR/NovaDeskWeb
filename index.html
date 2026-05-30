@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaDesk | El futuro de la gestión</title>
+    <title>NovaDesk | Tu carrera, bajo control</title>
     <style>
         /* ================= VARIABLES Y RESET ================= */
         :root {
-            --bg-color: #050505;
-            --text-main: #FFFFFF;
-            --text-muted: #A0A0A0;
-            --neon-primary: #00f0ff;
-            --neon-secondary: #b026ff;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --bg-color: #09090b;
+            --text-main: #f8fafc;
+            --text-muted: #a1a1aa;
+            --neon-primary: #10b981; /* Verde neón para vibra de "aprobado/éxito" */
+            --neon-secondary: #3b82f6; /* Azul eléctrico */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.05);
         }
 
         * {
@@ -33,17 +33,18 @@
         /* ================= EFECTOS PREMIUM ================= */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 2.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .glass-panel:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
         }
 
         .text-gradient {
@@ -55,7 +56,7 @@
         /* ================= BOTONES ================= */
         .btn {
             padding: 0.8rem 1.8rem;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
@@ -73,18 +74,18 @@
         .btn-login:hover {
             background: var(--glass-bg);
             border-color: var(--neon-primary);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
         }
 
         .btn-register {
-            background: linear-gradient(45deg, var(--neon-primary), #0077ff);
+            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary));
             color: #000;
             border: none;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
         }
 
         .btn-register:hover {
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
             transform: scale(1.05);
         }
 
@@ -98,32 +99,33 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--glass-border);
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: -0.5px;
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             align-items: center;
         }
 
         .nav-links a {
-            color: var(--text-main);
+            color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;
+            font-size: 0.95rem;
         }
 
         .nav-links a:hover {
-            color: var(--neon-primary);
+            color: var(--text-main);
         }
 
         .auth-buttons {
@@ -133,64 +135,65 @@
 
         /* ================= SECCIONES ================= */
         section {
-            padding: 6rem 5%;
+            padding: 7rem 5%;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 1.5rem; }
-        h2 { font-size: 2.5rem; margin-bottom: 2rem; text-align: center; }
-        p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 600px; }
+        h1 { font-size: 4.5rem; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px; }
+        h2 { font-size: 2.8rem; margin-bottom: 2rem; letter-spacing: -1px; }
+        p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; }
 
         /* Hero Section */
         #hero {
             align-items: center;
             text-align: center;
             position: relative;
-            background: radial-gradient(circle at center, rgba(176, 38, 255, 0.1) 0%, rgba(5,5,5,1) 50%);
+            background: radial-gradient(circle at top center, rgba(16, 185, 129, 0.08) 0%, rgba(9,9,11,1) 60%);
         }
 
-        #hero p { margin: 0 auto 2rem auto; }
+        #hero p { margin: 0 auto 2.5rem auto; max-width: 650px; font-size: 1.2rem; }
 
         .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; }
 
-        /* Grid Layouts para contenido */
+        /* Grid Layouts */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 5rem;
             align-items: center;
         }
 
         .grid-3 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
         }
 
         /* ================= FOOTER ================= */
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem;
             border-top: 1px solid var(--glass-border);
-            background: var(--bg-color);
-            margin-top: 4rem;
+            background: rgba(9, 9, 11, 0.95);
         }
 
         footer p {
             margin: 0;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
         }
 
         /* ================= ANIMACIONES ================= */
         .reveal {
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease-out;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal.active {
@@ -199,10 +202,11 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .nav-links { display: none; /* Simplificado para móvil */ }
-            .grid-2 { grid-template-columns: 1fr; gap: 2rem; }
+        @media (max-width: 992px) {
+            h1 { font-size: 3rem; }
+            .nav-links { display: none; }
+            .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
+            section { padding: 5rem 5%; }
         }
     </style>
 </head>
@@ -212,56 +216,55 @@
     <nav>
         <div class="logo">Nova<span class="text-gradient">Desk</span></div>
         <div class="nav-links">
-            <a href="#about">¿Qué es?</a>
+            <a href="#about">La Plataforma</a>
             <a href="#tools">Herramientas</a>
             <a href="#advantages">Ventajas</a>
             <a href="#vision">Visión</a>
         </div>
         <div class="auth-buttons">
-            <!-- REEMPLAZAR '#' CON TU LINK REAL DE INICIO DE SESIÓN -->
-            <a href="#" class="btn btn-login">Iniciar Sesión</a>
-            <!-- REEMPLAZAR '#' CON TU LINK REAL DE REGISTRO -->
-            <a href="#" class="btn btn-register">Registrarse</a>
+            <a href="URL_DE_TU_APP/login" class="btn btn-login">Iniciar Sesión</a>
+            <a href="URL_DE_TU_APP/registro" class="btn btn-register">Registrarse</a>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
     <section id="hero">
-        <h1 class="reveal">Centraliza tu universo con <br><span class="text-gradient">NovaDesk</span></h1>
-        <p class="reveal">La plataforma definitiva diseñada para optimizar tus flujos de trabajo, gestionar tus recursos y escalar tus proyectos al siguiente nivel. Todo en un solo lugar.</p>
+        <h1 class="reveal">Toda tu carrera, <br><span class="text-gradient">en un solo lugar</span></h1>
+        <p class="reveal">Olvídate de los PDFs perdidos y los apuntes desordenados. NovaDesk es el entorno digital definitivo diseñado para estudiantes que quieren dominar sus materias y optimizar su estudio.</p>
         <div class="hero-buttons reveal">
-            <a href="#" class="btn btn-register">Comenzar Ahora</a>
-            <a href="#about" class="btn btn-login">Saber más</a>
+            <a href="URL_DE_TU_APP/registro" class="btn btn-register">Crear cuenta gratis</a>
+            <a href="URL_DE_TU_APP/login" class="btn btn-login">Ya tengo cuenta</a>
         </div>
     </section>
 
     <!-- QUÉ ES NOVADESK -->
     <section id="about" class="grid-2">
         <div class="reveal">
-            <h2>¿Qué es NovaDesk?</h2>
-            <p>NovaDesk no es solo un software, es el ecosistema operativo central para tu negocio o proyecto. Desarrollado con los más altos estándares, combina inteligencia, velocidad y un diseño impecable para que dejes de saltar entre múltiples aplicaciones.</p>
-            <p><strong>Nuestro objetivo:</strong> Eliminar la fricción técnica y administrativa, permitiéndote enfocarte en lo que realmente importa: crear, gestionar y crecer.</p>
+            <h2>El caos académico, <br>resuelto.</h2>
+            <p>NovaDesk nace con un objetivo claro: darte el control total sobre lo que estudias. Es una plataforma integral donde cada materia tiene su espacio, cada apunte está a un clic de distancia y tu progreso académico se vuelve visual y manejable.</p>
+            <p>Se acabó el tener múltiples carpetas en la nube y notas en papel. Centralizamos tu vida estudiantil en una interfaz limpia, rápida y sin distracciones.</p>
         </div>
-        <div class="glass-panel reveal" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
-            <h3 class="text-gradient" style="font-size: 2rem;">Interfaz Mockup / Logo Aquí</h3>
+        <div class="glass-panel reveal" style="min-height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);">
+            <h3 class="text-gradient" style="font-size: 1.5rem; margin-bottom: 1rem;">Dashboard Preview</h3>
+            <p style="text-align: center; font-size: 0.9rem;">(Aquí puedes insertar una captura de pantalla de la app mostrando las materias)</p>
         </div>
     </section>
 
     <!-- HERRAMIENTAS -->
     <section id="tools">
-        <h2 class="reveal">Arsenal de Herramientas</h2>
+        <h2 class="reveal" style="text-align: center;">Tus nuevas herramientas</h2>
         <div class="grid-3">
             <div class="glass-panel reveal">
-                <h3 style="margin-bottom: 1rem; color: var(--neon-primary);">⚡ Gestión Dinámica</h3>
-                <p style="font-size: 0.95rem;">Controla tus proyectos, tareas y bases de datos con una interfaz fluida e intuitiva que se adapta a tu ritmo de trabajo.</p>
+                <h3 style="margin-bottom: 1rem; color: var(--neon-primary);">📚 Gestión de Materias</h3>
+                <p style="font-size: 0.95rem;">Crea perfiles para cada asignatura. Sigue tu estado (cursando, regular, aprobada) y mantén el programa de estudio siempre a mano.</p>
             </div>
             <div class="glass-panel reveal">
-                <h3 style="margin-bottom: 1rem; color: var(--neon-secondary);">🤖 Automatización</h3>
-                <p style="font-size: 0.95rem;">Conecta tus procesos y deja que NovaDesk maneje las tareas repetitivas. Menos tiempo manual, más eficiencia.</p>
+                <h3 style="margin-bottom: 1rem; color: var(--neon-secondary);">📝 Bóveda de Apuntes</h3>
+                <p style="font-size: 0.95rem;">Sube, clasifica y lee tus resúmenes y PDFs directamente en la plataforma. Todo organizado por unidad y tema.</p>
             </div>
             <div class="glass-panel reveal">
-                <h3 style="margin-bottom: 1rem; color: var(--neon-primary);">📊 Analítica en Tiempo Real</h3>
-                <p style="font-size: 0.95rem;">Visualiza métricas, estados financieros y progreso de objetivos en un dashboard brutalista y cristalino.</p>
+                <h3 style="margin-bottom: 1rem; color: var(--text-main);">🎯 Seguimiento de Metas</h3>
+                <p style="font-size: 0.95rem;">Controla fechas de parciales, entregas de trabajos prácticos y finales en un calendario pensado exclusivamente para tu carrera.</p>
             </div>
         </div>
     </section>
@@ -269,37 +272,34 @@
     <!-- CÓMO SE USA Y VENTAJAS -->
     <section id="advantages" class="grid-2">
         <div class="glass-panel reveal">
-            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">¿Cómo funciona?</h3>
-            <ol style="color: var(--text-muted); margin-left: 1.5rem; line-height: 2;">
-                <li><strong>Regístrate:</strong> Crea tu cuenta en segundos desde nuestro portal seguro.</li>
-                <li><strong>Configura tu entorno:</strong> Personaliza tu panel según tus necesidades específicas.</li>
-                <li><strong>Conecta tus datos:</strong> Sube tu información y deja que NovaDesk la organice.</li>
-                <li><strong>Opera:</strong> Disfruta de un flujo de trabajo unificado y sin interrupciones.</li>
-            </ol>
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">¿Cómo empezar?</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem; color: var(--text-muted);">
+                <p><strong>1. Únete:</strong> Regístrate en NovaDesk.</p>
+                <p><strong>2. Configura tu plan:</strong> Añade tu carrera y el año que estás cursando.</p>
+                <p><strong>3. Carga tus materias:</strong> Organiza el cuatrimestre y sube tus primeros apuntes.</p>
+                <p><strong>4. Enfócate:</strong> Estudia mejor, aprueba más y rinde al máximo.</p>
+            </div>
         </div>
         <div class="reveal">
-            <h2>La Ventaja Injusta</h2>
-            <p>Al elegir NovaDesk, obtienes una plataforma construida pensando en el rendimiento. No más interfaces sobrecargadas ni curvas de aprendizaje lentas.</p>
-            <ul style="color: var(--text-main); list-style: none; line-height: 2;">
-                <li>✔️ Arquitectura de alta velocidad.</li>
-                <li>✔️ Diseño Premium y Dark Mode nativo.</li>
-                <li>✔️ Escalabilidad garantizada.</li>
-                <li>✔️ Soporte técnico especializado.</li>
-            </ul>
+            <h2>Tu ventaja frente al resto</h2>
+            <p>NovaDesk no es un simple bloc de notas, es un sistema brutalista enfocado en la productividad pura. Diseñado en <em>Dark Mode</em> nativo para esas largas noches de estudio, protegiendo tu vista y manteniendo tu concentración al 100%.</p>
+            <div style="margin-top: 2rem;">
+                <a href="URL_DE_TU_APP/registro" class="btn btn-register">Empezar a organizar mi cursada</a>
+            </div>
         </div>
     </section>
 
     <!-- VISIÓN -->
-    <section id="vision" style="text-align: center; background: radial-gradient(circle at bottom, rgba(0, 240, 255, 0.1) 0%, rgba(5,5,5,1) 50%);">
-        <h2 class="reveal">Hacia dónde apuntamos</h2>
-        <p class="reveal" style="margin: 0 auto; font-size: 1.2rem;">Nuestra visión es convertir a NovaDesk en el estándar definitivo para la gestión digital. Seguiremos integrando inteligencia artificial, mejores automatizaciones y herramientas innovadoras para asegurar que siempre estés un paso adelante del resto.</p>
-        <br><br>
-        <a href="#" class="btn btn-register reveal" style="font-size: 1.2rem; padding: 1rem 2.5rem;">Únete a la evolución</a>
+    <section id="vision" style="text-align: center; background: radial-gradient(ellipse at bottom, rgba(16, 185, 129, 0.15) 0%, transparent 60%);">
+        <h2 class="reveal">Nuestra Visión</h2>
+        <p class="reveal" style="margin: 0 auto; font-size: 1.25rem; max-width: 800px; color: var(--text-main);">
+            Apuntamos a revolucionar la forma en que los estudiantes interactúan con su educación. Queremos que NovaDesk sea la herramienta imprescindible en la mochila digital de cada universitario, integrando tecnología de vanguardia para hacer que estudiar sea un proceso más inteligente, rápido y fluido.
+        </p>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <p class="text-gradient">Powered by NovaBit Media Agency © All Rights Reserved</p>
+        <p>Powered by <span class="text-gradient">NovaBit Media Agency</span> © All Rights Reserved</p>
     </footer>
 
     <!-- SCRIPT DE ANIMACIÓN SCROLL -->
@@ -309,15 +309,14 @@
             for (var i = 0; i < reveals.length; i++) {
                 var windowHeight = window.innerHeight;
                 var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100;
+                var elementVisible = 120;
                 if (elementTop < windowHeight - elementVisible) {
                     reveals[i].classList.add("active");
                 }
             }
         }
         window.addEventListener("scroll", reveal);
-        // Activar al cargar la página
-        reveal();
+        reveal(); // Trigger initial
     </script>
 </body>
 </html>
