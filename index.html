@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaDesk | El futuro de la gestión</title>
+    <style>
+        /* ================= VARIABLES Y RESET ================= */
+        :root {
+            --bg-color: #050505;
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0A0;
+            --neon-primary: #00f0ff;
+            --neon-secondary: #b026ff;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ================= EFECTOS PREMIUM ================= */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ================= BOTONES ================= */
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-block;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-login:hover {
+            background: var(--glass-bg);
+            border-color: var(--neon-primary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-register {
+            background: linear-gradient(45deg, var(--neon-primary), #0077ff);
+            color: #000;
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-register:hover {
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        /* ================= NAVEGACIÓN ================= */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* ================= SECCIONES ================= */
+        section {
+            padding: 6rem 5%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 1.5rem; }
+        h2 { font-size: 2.5rem; margin-bottom: 2rem; text-align: center; }
+        p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 600px; }
+
+        /* Hero Section */
+        #hero {
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(176, 38, 255, 0.1) 0%, rgba(5,5,5,1) 50%);
+        }
+
+        #hero p { margin: 0 auto 2rem auto; }
+
+        .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; }
+
+        /* Grid Layouts para contenido */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--glass-border);
+            background: var(--bg-color);
+            margin-top: 4rem;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ================= ANIMACIONES ================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .nav-links { display: none; /* Simplificado para móvil */ }
+            .grid-2 { grid-template-columns: 1fr; gap: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN -->
+    <nav>
+        <div class="logo">Nova<span class="text-gradient">Desk</span></div>
+        <div class="nav-links">
+            <a href="#about">¿Qué es?</a>
+            <a href="#tools">Herramientas</a>
+            <a href="#advantages">Ventajas</a>
+            <a href="#vision">Visión</a>
+        </div>
+        <div class="auth-buttons">
+            <!-- REEMPLAZAR '#' CON TU LINK REAL DE INICIO DE SESIÓN -->
+            <a href="#" class="btn btn-login">Iniciar Sesión</a>
+            <!-- REEMPLAZAR '#' CON TU LINK REAL DE REGISTRO -->
+            <a href="#" class="btn btn-register">Registrarse</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="hero">
+        <h1 class="reveal">Centraliza tu universo con <br><span class="text-gradient">NovaDesk</span></h1>
+        <p class="reveal">La plataforma definitiva diseñada para optimizar tus flujos de trabajo, gestionar tus recursos y escalar tus proyectos al siguiente nivel. Todo en un solo lugar.</p>
+        <div class="hero-buttons reveal">
+            <a href="#" class="btn btn-register">Comenzar Ahora</a>
+            <a href="#about" class="btn btn-login">Saber más</a>
+        </div>
+    </section>
+
+    <!-- QUÉ ES NOVADESK -->
+    <section id="about" class="grid-2">
+        <div class="reveal">
+            <h2>¿Qué es NovaDesk?</h2>
+            <p>NovaDesk no es solo un software, es el ecosistema operativo central para tu negocio o proyecto. Desarrollado con los más altos estándares, combina inteligencia, velocidad y un diseño impecable para que dejes de saltar entre múltiples aplicaciones.</p>
+            <p><strong>Nuestro objetivo:</strong> Eliminar la fricción técnica y administrativa, permitiéndote enfocarte en lo que realmente importa: crear, gestionar y crecer.</p>
+        </div>
+        <div class="glass-panel reveal" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
+            <h3 class="text-gradient" style="font-size: 2rem;">Interfaz Mockup / Logo Aquí</h3>
+        </div>
+    </section>
+
+    <!-- HERRAMIENTAS -->
+    <section id="tools">
+        <h2 class="reveal">Arsenal de Herramientas</h2>
+        <div class="grid-3">
+            <div class="glass-panel reveal">
+                <h3 style="margin-bottom: 1rem; color: var(--neon-primary);">⚡ Gestión Dinámica</h3>
+                <p style="font-size: 0.95rem;">Controla tus proyectos, tareas y bases de datos con una interfaz fluida e intuitiva que se adapta a tu ritmo de trabajo.</p>
+            </div>
+            <div class="glass-panel reveal">
+                <h3 style="margin-bottom: 1rem; color: var(--neon-secondary);">🤖 Automatización</h3>
+                <p style="font-size: 0.95rem;">Conecta tus procesos y deja que NovaDesk maneje las tareas repetitivas. Menos tiempo manual, más eficiencia.</p>
+            </div>
+            <div class="glass-panel reveal">
+                <h3 style="margin-bottom: 1rem; color: var(--neon-primary);">📊 Analítica en Tiempo Real</h3>
+                <p style="font-size: 0.95rem;">Visualiza métricas, estados financieros y progreso de objetivos en un dashboard brutalista y cristalino.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CÓMO SE USA Y VENTAJAS -->
+    <section id="advantages" class="grid-2">
+        <div class="glass-panel reveal">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">¿Cómo funciona?</h3>
+            <ol style="color: var(--text-muted); margin-left: 1.5rem; line-height: 2;">
+                <li><strong>Regístrate:</strong> Crea tu cuenta en segundos desde nuestro portal seguro.</li>
+                <li><strong>Configura tu entorno:</strong> Personaliza tu panel según tus necesidades específicas.</li>
+                <li><strong>Conecta tus datos:</strong> Sube tu información y deja que NovaDesk la organice.</li>
+                <li><strong>Opera:</strong> Disfruta de un flujo de trabajo unificado y sin interrupciones.</li>
+            </ol>
+        </div>
+        <div class="reveal">
+            <h2>La Ventaja Injusta</h2>
+            <p>Al elegir NovaDesk, obtienes una plataforma construida pensando en el rendimiento. No más interfaces sobrecargadas ni curvas de aprendizaje lentas.</p>
+            <ul style="color: var(--text-main); list-style: none; line-height: 2;">
+                <li>✔️ Arquitectura de alta velocidad.</li>
+                <li>✔️ Diseño Premium y Dark Mode nativo.</li>
+                <li>✔️ Escalabilidad garantizada.</li>
+                <li>✔️ Soporte técnico especializado.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- VISIÓN -->
+    <section id="vision" style="text-align: center; background: radial-gradient(circle at bottom, rgba(0, 240, 255, 0.1) 0%, rgba(5,5,5,1) 50%);">
+        <h2 class="reveal">Hacia dónde apuntamos</h2>
+        <p class="reveal" style="margin: 0 auto; font-size: 1.2rem;">Nuestra visión es convertir a NovaDesk en el estándar definitivo para la gestión digital. Seguiremos integrando inteligencia artificial, mejores automatizaciones y herramientas innovadoras para asegurar que siempre estés un paso adelante del resto.</p>
+        <br><br>
+        <a href="#" class="btn btn-register reveal" style="font-size: 1.2rem; padding: 1rem 2.5rem;">Únete a la evolución</a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="text-gradient">Powered by NovaBit Media Agency © All Rights Reserved</p>
+    </footer>
+
+    <!-- SCRIPT DE ANIMACIÓN SCROLL -->
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Activar al cargar la página
+        reveal();
+    </script>
+</body>
+</html>
