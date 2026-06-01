@@ -3,90 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaDesk | Tu carrera, bajo control</title>
+    <title>NovaDesk | Revoluciona tu forma de estudiar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
     <style>
-        /* ================= VARIABLES Y RESET ================= */
+        /* ================= VARIABLES Y ESTÉTICA DE LA APP ================= */
         :root {
-            --bg-color: #09090b;
-            --text-main: #f8fafc;
-            --text-muted: #a1a1aa;
-            --neon-primary: #10b981; /* Verde neón para vibra de "aprobado/éxito" */
-            --neon-secondary: #3b82f6; /* Azul eléctrico */
-            --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.05);
+            --bg-color: #000000;
+            --bg-gradient: linear-gradient(135deg, #000000 0%, #1c1c1e 100%);
+            --text-main: #f5f5f7;
+            --text-muted: #a1a1a6;
+            --primary: #0a84ff;
+            --accent: #34c759;
+            --purple: #af52de;
+            --glass-bg: rgba(28, 28, 30, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --inner-glow: inset 0 1px 1px rgba(255,255,255,0.1), inset 1px 0 1px rgba(255,255,255,0.05);
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
+            background: var(--bg-gradient);
             color: var(--text-main);
             overflow-x: hidden;
             line-height: 1.6;
+            position: relative;
         }
 
-        /* ================= EFECTOS PREMIUM ================= */
+        /* ================= BLOBS FLOTANTES (Fondo Dinámico) ================= */
+        .blob-1, .blob-2, .blob-3 {
+            position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.25; transition: 0.5s;
+        }
+        .blob-1 { width: 45vw; height: 45vw; background: var(--primary); top: -10%; left: -10%; animation: float 18s infinite ease-in-out alternate; }
+        .blob-2 { width: 35vw; height: 35vw; background: var(--accent); bottom: -10%; right: -5%; animation: float 15s infinite ease-in-out alternate-reverse; }
+        .blob-3 { width: 30vw; height: 30vw; background: var(--purple); top: 40%; left: 30%; animation: float 20s infinite ease-in-out alternate; }
+        
+        @keyframes float { 
+            0% { transform: translate(0, 0) scale(1); } 
+            100% { transform: translate(30px, 50px) scale(1.1); } 
+        }
+
+        /* ================= COMPONENTES GLASSMORPHISM ================= */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
+            border-radius: 28px;
             padding: 2.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow-glass), var(--inner-glow);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
         }
 
         .glass-panel:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.2);
+            border-color: rgba(10, 132, 255, 0.3);
         }
 
         .text-gradient {
-            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            background: linear-gradient(90deg, var(--primary), var(--purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         /* ================= BOTONES ================= */
         .btn {
-            padding: 0.8rem 1.8rem;
-            border-radius: 10px;
-            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-weight: 700;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             font-size: 1rem;
-            display: inline-block;
         }
 
-        .btn-login {
-            background: transparent;
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
             border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
 
-        .btn-login:hover {
-            background: var(--glass-bg);
-            border-color: var(--neon-primary);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
-        .btn-register {
-            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary));
-            color: #000;
+        .btn-primary {
+            background: var(--primary);
+            color: white;
             border: none;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(10, 132, 255, 0.3);
         }
 
-        .btn-register:hover {
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
-            transform: scale(1.05);
+        .btn-primary:hover {
+            background: #409cff;
+            box-shadow: 0 8px 25px rgba(10, 132, 255, 0.4);
+            transform: translateY(-2px);
         }
 
         /* ================= NAVEGACIÓN ================= */
@@ -94,216 +119,184 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 5%;
+            padding: 1.2rem 5%;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            background: rgba(9, 9, 11, 0.85);
-            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; }
 
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-main);
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
+        .nav-links { display: flex; gap: 2.5rem; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .auth-buttons { display: flex; gap: 1rem; }
 
         /* ================= SECCIONES ================= */
-        section {
-            padding: 7rem 5%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+        section { padding: 8rem 5% 5rem 5%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
+        
+        h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px; }
+        h2 { font-size: 3rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1px; }
+        p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 2.5rem; font-weight: 500; }
 
-        h1 { font-size: 4.5rem; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px; }
-        h2 { font-size: 2.8rem; margin-bottom: 2rem; letter-spacing: -1px; }
-        p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; }
-
-        /* Hero Section */
-        #hero {
-            align-items: center;
-            text-align: center;
-            position: relative;
-            background: radial-gradient(circle at top center, rgba(16, 185, 129, 0.08) 0%, rgba(9,9,11,1) 60%);
-        }
-
-        #hero p { margin: 0 auto 2.5rem auto; max-width: 650px; font-size: 1.2rem; }
-
+        /* Hero */
+        #hero { text-align: center; align-items: center; }
+        #hero p { max-width: 700px; margin: 0 auto 3rem auto; font-size: 1.25rem; }
         .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; }
 
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5rem;
-            align-items: center;
-        }
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 3rem; }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
+        /* Tarjetas de Herramientas */
+        .feature-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer { text-align: center; padding: 2rem; border-top: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px); position: relative; z-index: 10; }
+        footer p { margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
 
-        /* ================= FOOTER ================= */
-        footer {
-            text-align: center;
-            padding: 2.5rem;
-            border-top: 1px solid var(--glass-border);
-            background: rgba(9, 9, 11, 0.95);
-        }
+        /* Animaciones Scroll */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        footer p {
-            margin: 0;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        /* ================= ANIMACIONES ================= */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Responsive */
         @media (max-width: 992px) {
             h1 { font-size: 3rem; }
             .nav-links { display: none; }
             .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
-            section { padding: 5rem 5%; }
+            section { padding: 6rem 5% 4rem 5%; min-height: auto; }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVEGACIÓN -->
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+    <div class="blob-3"></div>
+
     <nav>
-        <div class="logo">Nova<span class="text-gradient">Desk</span></div>
+        <div class="logo">
+            <img src="https://i.imgur.com/4FFyqzv.png" alt="NovaDesk" style="height: 28px;">
+        </div>
         <div class="nav-links">
-            <a href="#about">La Plataforma</a>
-            <a href="#tools">Herramientas</a>
-            <a href="#advantages">Ventajas</a>
-            <a href="#vision">Visión</a>
+            <a href="#about">Plataforma</a>
+            <a href="#features">Herramientas IA</a>
+            <a href="#workflow">Flujo de Estudio</a>
         </div>
         <div class="auth-buttons">
-            <a href="URL_DE_TU_APP/login" class="btn btn-login">Iniciar Sesión</a>
-            <a href="URL_DE_TU_APP/registro" class="btn btn-register">Registrarse</a>
+            <a href="#" class="btn btn-outline">Iniciar Sesión</a>
+            <a href="#" class="btn btn-primary"><i class="bi bi-rocket-takeoff"></i> Registrarse</a>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
     <section id="hero">
-        <h1 class="reveal">Toda tu carrera, <br><span class="text-gradient">en un solo lugar</span></h1>
-        <p class="reveal">Olvídate de los PDFs perdidos y los apuntes desordenados. NovaDesk es el entorno digital definitivo diseñado para estudiantes que quieren dominar sus materias y optimizar su estudio.</p>
-        <div class="hero-buttons reveal">
-            <a href="URL_DE_TU_APP/registro" class="btn btn-register">Crear cuenta gratis</a>
-            <a href="URL_DE_TU_APP/login" class="btn btn-login">Ya tengo cuenta</a>
+        <div class="reveal">
+            <div style="display: inline-block; padding: 6px 16px; background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.2); border-radius: 50px; color: var(--accent); font-weight: 700; font-size: 0.85rem; margin-bottom: 1.5rem;">
+                <i class="bi bi-stars"></i> Potenciado por Inteligencia Artificial
+            </div>
+            <h1>Tu vida universitaria,<br><span class="text-gradient">centralizada y perfecta.</span></h1>
+            <p>Olvídate del desorden. NovaDesk organiza tus carreras, gestiona tus apuntes con un editor enriquecido y utiliza IA avanzada para generar cuestionarios y explicarte conceptos complejos al instante.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Crear cuenta gratis</a>
+                <a href="#features" class="btn btn-outline">Explorar funciones</a>
+            </div>
         </div>
     </section>
 
-    <!-- QUÉ ES NOVADESK -->
     <section id="about" class="grid-2">
         <div class="reveal">
-            <h2>El caos académico, <br>resuelto.</h2>
-            <p>NovaDesk nace con un objetivo claro: darte el control total sobre lo que estudias. Es una plataforma integral donde cada materia tiene su espacio, cada apunte está a un clic de distancia y tu progreso académico se vuelve visual y manejable.</p>
-            <p>Se acabó el tener múltiples carpetas en la nube y notas en papel. Centralizamos tu vida estudiantil en una interfaz limpia, rápida y sin distracciones.</p>
+            <h2>El control absoluto de tus clases.</h2>
+            <p>NovaDesk está diseñado con una arquitectura limpia y enfocada al 100% en la concentración. Organiza tu cuatrimestre por carreras, años y materias. Mantén el foco en lo que importa: aprender.</p>
+            <ul style="list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600;"><i class="bi bi-check-circle-fill" style="color: var(--primary);"></i> Gestión de carreras y materias.</li>
+                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600;"><i class="bi bi-check-circle-fill" style="color: var(--primary);"></i> Guardado automático en la nube.</li>
+                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600;"><i class="bi bi-check-circle-fill" style="color: var(--primary);"></i> Modo Concentración y Modo Presentación.</li>
+            </ul>
         </div>
-        <div class="glass-panel reveal" style="min-height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);">
-            <h3 class="text-gradient" style="font-size: 1.5rem; margin-bottom: 1rem;">Dashboard Preview</h3>
-            <p style="text-align: center; font-size: 0.9rem;">(Aquí puedes insertar una captura de pantalla de la app mostrando las materias)</p>
+        <div class="glass-panel reveal" style="padding: 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="background: rgba(0,0,0,0.4); padding: 15px; border-bottom: 1px solid var(--glass-border); display: flex; gap: 8px;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #ff3b30;"></div>
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #ffcc00;"></div>
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--accent);"></div>
+            </div>
+            <div style="padding: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--primary);"><i class="bi bi-mortarboard-fill"></i> Mis Carreras</h3>
+                <div style="background: var(--glass-bg); padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-weight: 700;">Química Biológica</span> <span style="font-size: 0.8rem; color: var(--accent);">Cursando</span>
+                </div>
+                <div style="background: var(--glass-bg); padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700;">Física II</span> <span style="font-size: 0.8rem; color: var(--accent);">Cursando</span>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- HERRAMIENTAS -->
-    <section id="tools">
-        <h2 class="reveal" style="text-align: center;">Tus nuevas herramientas</h2>
+    <section id="features" style="text-align: center;">
+        <h2 class="reveal">Arsenal de <span class="text-gradient">Productividad</span></h2>
+        <p class="reveal" style="margin: 0 auto; max-width: 600px;">Herramientas diseñadas para exprimir al máximo tus horas de estudio, sin distracciones y con el poder de la tecnología moderna.</p>
+        
         <div class="grid-3">
-            <div class="glass-panel reveal">
-                <h3 style="margin-bottom: 1rem; color: var(--neon-primary);">📚 Gestión de Materias</h3>
-                <p style="font-size: 0.95rem;">Crea perfiles para cada asignatura. Sigue tu estado (cursando, regular, aprobada) y mantén el programa de estudio siempre a mano.</p>
+            <div class="glass-panel reveal" style="text-align: left;">
+                <div class="feature-icon" style="background: rgba(175, 82, 222, 0.1); color: var(--purple);">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <h3>Copiloto de Estudio IA</h3>
+                <p style="font-size: 0.95rem; margin-top: 10px; margin-bottom: 0;">Integración nativa con modelos generativos para explicarte conceptos difíciles, resumir textos o crear Flashcards y Quizzes automáticos basados en tus apuntes.</p>
             </div>
-            <div class="glass-panel reveal">
-                <h3 style="margin-bottom: 1rem; color: var(--neon-secondary);">📝 Bóveda de Apuntes</h3>
-                <p style="font-size: 0.95rem;">Sube, clasifica y lee tus resúmenes y PDFs directamente en la plataforma. Todo organizado por unidad y tema.</p>
+            
+            <div class="glass-panel reveal" style="text-align: left;">
+                <div class="feature-icon" style="background: rgba(52, 199, 89, 0.1); color: var(--accent);">
+                    <i class="bi bi-stopwatch"></i>
+                </div>
+                <h3>Método Pomodoro</h3>
+                <p style="font-size: 0.95rem; margin-top: 10px; margin-bottom: 0;">Gestiona tus sesiones de estudio con un widget de Pomodoro integrado directamente en tu barra de tareas superior para mantener el foco inquebrantable.</p>
             </div>
-            <div class="glass-panel reveal">
-                <h3 style="margin-bottom: 1rem; color: var(--text-main);">🎯 Seguimiento de Metas</h3>
-                <p style="font-size: 0.95rem;">Controla fechas de parciales, entregas de trabajos prácticos y finales en un calendario pensado exclusivamente para tu carrera.</p>
+
+            <div class="glass-panel reveal" style="text-align: left;">
+                <div class="feature-icon" style="background: rgba(10, 132, 255, 0.1); color: var(--primary);">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                </div>
+                <h3>Exportación y Lectura</h3>
+                <p style="font-size: 0.95rem; margin-top: 10px; margin-bottom: 0;">Exporta tus resúmenes a PDF con formato inquebrantable o utiliza el sintetizador de voz integrado (Text-to-Speech) para escuchar tus apuntes mientras haces otra cosa.</p>
             </div>
         </div>
     </section>
 
-    <!-- CÓMO SE USA Y VENTAJAS -->
-    <section id="advantages" class="grid-2">
-        <div class="glass-panel reveal">
-            <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem;">¿Cómo empezar?</h3>
-            <div style="display: flex; flex-direction: column; gap: 1rem; color: var(--text-muted);">
-                <p><strong>1. Únete:</strong> Regístrate en NovaDesk.</p>
-                <p><strong>2. Configura tu plan:</strong> Añade tu carrera y el año que estás cursando.</p>
-                <p><strong>3. Carga tus materias:</strong> Organiza el cuatrimestre y sube tus primeros apuntes.</p>
-                <p><strong>4. Enfócate:</strong> Estudia mejor, aprueba más y rinde al máximo.</p>
-            </div>
+    <section id="workflow" class="grid-2">
+        <div class="glass-panel reveal" style="background: rgba(0,0,0,0.6);">
+            <h3 style="margin-bottom: 1.5rem; color: white;">Navegación ultrarrápida</h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px; color: var(--text-muted);">
+                <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">
+                    <span>Paleta de Comandos</span> <strong style="color: white; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px;">Ctrl + K</strong>
+                </li>
+                <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">
+                    <span>Guardado Rápido</span> <strong style="color: white; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px;">Ctrl + S</strong>
+                </li>
+                <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">
+                    <span>Modo Presentación</span> <strong style="color: white; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px;">Alt + M</strong>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                    <span>Abrir IA Asistente</span> <strong style="color: white; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px;">Alt + I</strong>
+                </li>
+            </ul>
         </div>
         <div class="reveal">
-            <h2>Tu ventaja frente al resto</h2>
-            <p>NovaDesk no es un simple bloc de notas, es un sistema brutalista enfocado en la productividad pura. Diseñado en <em>Dark Mode</em> nativo para esas largas noches de estudio, protegiendo tu vista y manteniendo tu concentración al 100%.</p>
-            <div style="margin-top: 2rem;">
-                <a href="URL_DE_TU_APP/registro" class="btn btn-register">Empezar a organizar mi cursada</a>
-            </div>
+            <h2>Diseñado para el <br>alto rendimiento.</h2>
+            <p>NovaDesk no es un simple editor de texto. Su entorno limpia códigos basura al pegar información, estructura automáticamente tus resúmenes, cuenta con paleta de comandos para atajos y cuenta con soporte nativo de <em>Dark Mode</em> para proteger tu vista en esas madrugadas de estudio.</p>
+            <a href="#" class="btn btn-primary" style="margin-top: 1rem;"><i class="bi bi-lightning-fill"></i> Iniciar mi espacio ahora</a>
         </div>
     </section>
 
-    <!-- VISIÓN -->
-    <section id="vision" style="text-align: center; background: radial-gradient(ellipse at bottom, rgba(16, 185, 129, 0.15) 0%, transparent 60%);">
-        <h2 class="reveal">Nuestra Visión</h2>
-        <p class="reveal" style="margin: 0 auto; font-size: 1.25rem; max-width: 800px; color: var(--text-main);">
-            Apuntamos a revolucionar la forma en que los estudiantes interactúan con su educación. Queremos que NovaDesk sea la herramienta imprescindible en la mochila digital de cada universitario, integrando tecnología de vanguardia para hacer que estudiar sea un proceso más inteligente, rápido y fluido.
-        </p>
-    </section>
-
-    <!-- FOOTER -->
     <footer>
-        <p>Powered by <span class="text-gradient">NovaBit Media Agency</span> © All Rights Reserved</p>
+        <p>Powered by NovaBit Media Agency © All Rights Reserved</p>
     </footer>
 
-    <!-- SCRIPT DE ANIMACIÓN SCROLL -->
     <script>
+        // Efecto Fade In Up al hacer scroll
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -316,7 +309,7 @@
             }
         }
         window.addEventListener("scroll", reveal);
-        reveal(); // Trigger initial
+        reveal(); // Activar al inicio
     </script>
 </body>
 </html>
