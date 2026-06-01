@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NovaDesk | El futuro de la gestión académica</title>
+    
+    <!-- FAVICON (Logo en la pestaña del navegador) -->
+    <link rel="icon" href="https://i.imgur.com/SCqSBHU.png" type="image/png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
@@ -91,7 +95,7 @@
             border-radius: 28px; padding: 3rem;
             box-shadow: var(--shadow-glass), var(--inner-glow);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative; overflow: hidden; /* Necesario para el resplandor interno */
+            position: relative; overflow: hidden;
         }
 
         /* Mouse Tracking Glow Effect */
@@ -103,7 +107,7 @@
             opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 0;
         }
         .glass-panel:hover::before { opacity: 1; }
-        .glass-panel > * { position: relative; z-index: 1; } /* Asegura que el contenido quede arriba del brillo */
+        .glass-panel > * { position: relative; z-index: 1; }
 
         .glass-panel.tilt:hover {
             transform: translateY(-8px);
@@ -172,8 +176,9 @@
         /* ================= SECCIONES ================= */
         section { padding: 10rem 5% 6rem 5%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
         
-        h1 { font-size: 5.5rem; font-weight: 800; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -2.5px; color: var(--text-main); }
-        h2 { font-size: 3.8rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.5px; color: var(--text-main); }
+        /* Tipografía fluida (clamp) */
+        h1 { font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 800; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -2px; color: var(--text-main); }
+        h2 { font-size: clamp(2.5rem, 4.5vw, 3.5rem); font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.5px; color: var(--text-main); line-height: 1.1; }
         p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2.5rem; font-weight: 500; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
@@ -216,11 +221,10 @@
         .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
 
         @media (max-width: 992px) {
-            h1 { font-size: 3.8rem; } h2 { font-size: 3rem; }
             .nav-links { display: none; }
             .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
             section { padding: 8rem 5% 4rem 5%; min-height: auto; }
-            .cursor-dot, .cursor-outline { display: none; } /* Ocultar cursor custom en móviles */
+            .cursor-dot, .cursor-outline { display: none; }
             * { cursor: auto !important; }
         }
     </style>
@@ -274,8 +278,9 @@
     <!-- ACERCA DE (CON MOCKUP REALISTA) -->
     <section id="about" class="grid-2">
         <div class="reveal">
-            <h2>Organización visual,<br>cero estrés.</h2>
-            <p>NovaDesk mapea tu cerebro. Cada carrera tiene su espacio vital, cada materia su portada personalizada y cada línea de texto que escribas se respalda automáticamente mediante tecnología Cloud-Sync de alta velocidad.</p>
+            <h2>Organización visual, cero estrés.</h2>
+            <p style="max-width: 500px;">NovaDesk mapea tu cerebro. Cada carrera tiene su espacio vital, cada materia su portada personalizada y cada línea de texto que escribas se respalda automáticamente mediante tecnología Cloud-Sync de alta velocidad.</p>
+            
             <ul style="list-style: none; margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; color: var(--text-main);">
                 <li style="display: flex; gap: 15px; align-items: center; font-weight: 700; font-size: 1.1rem;" class="reveal delay-1">
                     <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.2);"><i class="bi bi-check-lg"></i></div>
@@ -495,7 +500,6 @@
                     const rect = btn.getBoundingClientRect();
                     const x = e.clientX - rect.left - rect.width / 2;
                     const y = e.clientY - rect.top - rect.height / 2;
-                    // Fuerza del imán (divide por un número mayor para menos fuerza)
                     btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
                 });
                 btn.addEventListener('mouseleave', function() {
@@ -515,17 +519,17 @@
             });
         }
 
-        // 3. Revelado de elementos al hacer scroll (Intersection Observer es más óptimo)
+        // 3. Revelado de elementos al hacer scroll
         const revealElements = document.querySelectorAll('.reveal');
         const revealOptions = {
-            threshold: 0.15, // Porcentaje del elemento visible para disparar
+            threshold: 0.15,
             rootMargin: "0px 0px -50px 0px"
         };
         const revealOnScroll = new IntersectionObserver(function(entries, observer) {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
                 entry.target.classList.add('active');
-                observer.unobserve(entry.target); // Solo animar una vez
+                observer.unobserve(entry.target);
             });
         }, revealOptions);
 
@@ -536,7 +540,6 @@
             const item = element.parentElement;
             const body = item.querySelector('.faq-body');
             
-            // Cerrar otros (Acordeón estricto)
             document.querySelectorAll('.faq-item').forEach(i => {
                 if(i !== item && i.classList.contains('active')) {
                     i.classList.remove('active');
@@ -544,7 +547,6 @@
                 }
             });
 
-            // Toggle actual
             item.classList.toggle('active');
             if (item.classList.contains('active')) {
                 body.style.maxHeight = body.scrollHeight + "px";
