@@ -17,13 +17,14 @@
             --primary-hover: #0056b3;
             --accent: #34c759;
             --purple: #af52de;
+            --danger: #ff3b30;
             
-            /* Efecto Cristal Claro */
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.9);
             --glass-border-highlight: rgba(255, 255, 255, 1);
-            --shadow-glass: 0 12px 40px rgba(0, 0, 0, 0.06);
-            --inner-glow: inset 0 1px 1px rgba(255,255,255,0.8), inset 1px 0 1px rgba(255,255,255,0.4);
+            --shadow-glass: 0 12px 40px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 50px rgba(0, 122, 255, 0.12);
+            --inner-glow: inset 0 1px 1px rgba(255,255,255,0.9), inset 1px 0 1px rgba(255,255,255,0.5);
         }
 
         * {
@@ -34,28 +35,45 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html {
+            scroll-behavior: smooth; /* Scroll suave nativo */
+        }
+
         body {
-            background: var(--bg-gradient);
+            background-color: #f8fafc;
             color: var(--text-main);
             overflow-x: hidden;
             line-height: 1.6;
             position: relative;
         }
 
-        /* ================= BLOBS FLOTANTES (Colores pastel vibrantes) ================= */
-        .blob-1, .blob-2, .blob-3 {
-            position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.4; transition: 0.5s;
-        }
-        .blob-1 { width: 45vw; height: 45vw; background: rgba(0, 122, 255, 0.5); top: -10%; left: -10%; animation: float 18s infinite ease-in-out alternate; }
-        .blob-2 { width: 35vw; height: 35vw; background: rgba(52, 199, 89, 0.4); bottom: -10%; right: -5%; animation: float 15s infinite ease-in-out alternate-reverse; }
-        .blob-3 { width: 30vw; height: 30vw; background: rgba(175, 82, 222, 0.3); top: 40%; left: 30%; animation: float 20s infinite ease-in-out alternate; }
-        
-        @keyframes float { 
-            0% { transform: translate(0, 0) scale(1); } 
-            100% { transform: translate(30px, 50px) scale(1.05); } 
+        /* Patrón de fondo sutil (Grid) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -2;
+            pointer-events: none;
         }
 
-        /* ================= COMPONENTES GLASSMORPHISM CLARO ================= */
+        /* ================= BLOBS FLOTANTES ================= */
+        .blob-1, .blob-2, .blob-3 {
+            position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.35; transition: 0.5s;
+        }
+        .blob-1 { width: 45vw; height: 45vw; background: rgba(0, 122, 255, 0.6); top: -10%; left: -10%; animation: float 20s infinite ease-in-out alternate; }
+        .blob-2 { width: 35vw; height: 35vw; background: rgba(52, 199, 89, 0.4); bottom: -10%; right: -5%; animation: float 18s infinite ease-in-out alternate-reverse; }
+        .blob-3 { width: 30vw; height: 30vw; background: rgba(175, 82, 222, 0.3); top: 40%; left: 30%; animation: float 25s infinite ease-in-out alternate; }
+        
+        @keyframes float { 
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); } 
+            100% { transform: translate(40px, 60px) scale(1.1) rotate(10deg); } 
+        }
+
+        /* ================= COMPONENTES GLASSMORPHISM ================= */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(30px) saturate(150%);
@@ -66,18 +84,27 @@
             border-radius: 28px;
             padding: 3rem;
             box-shadow: var(--shadow-glass), var(--inner-glow);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: perspective(1000px) rotateX(0) rotateY(0);
         }
 
-        .glass-panel:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(0, 122, 255, 0.1), var(--inner-glow);
+        /* Efecto 3D Hover (Tilt) */
+        .glass-panel.tilt:hover {
+            transform: perspective(1000px) translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: var(--shadow-hover), var(--inner-glow);
+            border-color: rgba(0, 122, 255, 0.2);
         }
 
         .text-gradient {
             background: linear-gradient(135deg, var(--primary), var(--purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
         }
 
         /* ================= BOTONES ================= */
@@ -87,12 +114,14 @@
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             font-size: 1.05rem;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-login {
@@ -105,8 +134,8 @@
 
         .btn-login:hover {
             background: #ffffff;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transform: translateY(-3px) scale(1.02);
         }
 
         .btn-register {
@@ -114,12 +143,19 @@
             color: #ffffff;
             border: none;
             box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
+            z-index: 1;
         }
 
+        /* Efecto de brillo interior en el botón */
+        .btn-register::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease; z-index: -1;
+        }
+        .btn-register:hover::before { left: 100%; }
         .btn-register:hover {
-            background: var(--primary-hover);
-            box-shadow: 0 12px 30px rgba(0, 122, 255, 0.4);
-            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 122, 255, 0.45);
+            transform: translateY(-3px) scale(1.03);
         }
 
         /* ================= NAVEGACIÓN ================= */
@@ -132,83 +168,136 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
             border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.8rem 5%;
+            background: rgba(255, 255, 255, 0.85);
         }
 
         .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
         
         .nav-links { display: flex; gap: 2.5rem; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; position: relative; }
+        
+        /* Subrayado animado nav */
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
+            background-color: var(--primary); transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-links a:hover::after { width: 100%; }
+        
         .auth-buttons { display: flex; gap: 1rem; }
 
         /* ================= SECCIONES ================= */
-        section { padding: 9rem 5% 5rem 5%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
+        section { padding: 9rem 5% 6rem 5%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
         
-        h1 { font-size: 4.8rem; font-weight: 800; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -2px; color: var(--text-main); }
-        h2 { font-size: 3.2rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.2px; color: var(--text-main); }
+        h1 { font-size: 5rem; font-weight: 800; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -2px; color: var(--text-main); }
+        h2 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.2px; color: var(--text-main); }
         p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2.5rem; font-weight: 500; }
-
-        /* Hero */
-        #hero { text-align: center; align-items: center; }
-        #hero p { max-width: 750px; margin: 0 auto 3rem auto; }
-        .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; }
 
         /* Grids */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; margin-top: 3rem; }
 
-        /* Tarjetas de Herramientas */
-        .feature-icon { width: 55px; height: 55px; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; margin-bottom: 1.5rem; background: #ffffff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
-        
-        /* Dashboard Mockup (CSS puro para que cargue rápido) */
+        /* Dashboard Mockup (Animado) */
         .mockup-container {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.05);
-            transform: rotate(-2deg);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            background: #ffffff; border-radius: 24px; padding: 1.5rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
-        .mockup-container:hover { transform: rotate(0deg) scale(1.02); }
+        .mockup-container::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 24px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); pointer-events: none;
+        }
+        .mockup-container:hover { transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1); box-shadow: 0 40px 80px rgba(0, 122, 255, 0.15); }
 
-        /* Footer */
-        footer { text-align: center; padding: 2.5rem; border-top: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px); position: relative; z-index: 10; }
-        footer p { margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
+        /* ================= FAQ ACORDEÓN ================= */
+        .faq-item {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item.active {
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-color: rgba(0, 122, 255, 0.3);
+        }
+        .faq-header {
+            padding: 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.1rem; color: var(--text-main);
+        }
+        .faq-icon {
+            font-size: 1.2rem; color: var(--primary); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+        .faq-body {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .faq-content { padding: 0 1.5rem 1.5rem 1.5rem; color: var(--text-muted); font-weight: 500; font-size: 1rem; line-height: 1.7; }
 
-        /* Animaciones Scroll */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        /* ================= SECCIÓN LEGAL ================= */
+        .legal-box {
+            background: rgba(0, 0, 0, 0.02);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            border-radius: 0 16px 16px 0;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .legal-box:hover { background: rgba(0, 122, 255, 0.05); transform: translateX(5px); }
+        .legal-box h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main); }
+        .legal-box p { font-size: 0.95rem; margin: 0; color: var(--text-muted); }
+
+        /* ================= FOOTER ================= */
+        footer { text-align: center; padding: 3rem; border-top: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(30px); position: relative; z-index: 10; }
+        footer p { margin: 0; font-size: 0.9rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; }
+
+        /* ================= ANIMACIONES DE REVELADO ================= */
+        .reveal { opacity: 0; transform: translateY(50px) scale(0.98); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+        /* Staggered delay classes */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
 
         @media (max-width: 992px) {
-            h1 { font-size: 3.2rem; }
-            h2 { font-size: 2.5rem; }
+            h1 { font-size: 3.5rem; }
+            h2 { font-size: 2.8rem; }
             .nav-links { display: none; }
             .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
             section { padding: 7rem 5% 4rem 5%; min-height: auto; }
-            .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
         }
     </style>
 </head>
 <body>
 
+    <!-- BLOBS DE FONDO -->
     <div class="blob-1"></div>
     <div class="blob-2"></div>
     <div class="blob-3"></div>
 
-    <nav>
+    <!-- NAVEGACIÓN -->
+    <nav id="navbar">
         <div class="logo">
             <img src="https://i.imgur.com/MzOcfDS.png" alt="NovaDesk Logo" style="height: 32px;">
         </div>
         <div class="nav-links">
             <a href="#about">Plataforma</a>
-            <a href="#features">Herramientas IA</a>
-            <a href="#workflow">Flujo de Estudio</a>
+            <a href="#features">Herramientas</a>
+            <a href="#faq">FAQ</a>
+            <a href="#legal">Legal</a>
         </div>
         <div class="auth-buttons">
             <a href="#" class="btn btn-login">Iniciar Sesión</a>
@@ -216,144 +305,232 @@
         </div>
     </nav>
 
-    <section id="hero">
+    <!-- HERO SECTION -->
+    <section id="hero" style="text-align: center; align-items: center;">
         <div class="reveal">
-            <div style="display: inline-block; padding: 6px 18px; background: #ffffff; border: 1px solid rgba(0,0,0,0.05); border-radius: 50px; color: var(--text-main); font-weight: 700; font-size: 0.85rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.04);">
-                <i class="bi bi-stars text-primary"></i> Impulsado por Google Gemini
+            <div style="display: inline-block; padding: 6px 18px; background: rgba(255,255,255,0.8); border: 1px solid var(--glass-border); border-radius: 50px; color: var(--text-main); font-weight: 700; font-size: 0.85rem; margin-bottom: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.05); backdrop-filter: blur(10px);">
+                <i class="bi bi-stars text-primary" style="margin-right: 5px;"></i> Impulsado por Google Gemini IA
             </div>
             <h1>La excelencia académica,<br><span class="text-gradient">diseñada para ti.</span></h1>
-            <p>NovaDesk es el hub definitivo para estudiantes de alto rendimiento. Clasifica tus apuntes, gestiona tus materias y utiliza nuestro Asistente de IA para convertir horas de lectura en minutos de comprensión pura.</p>
-            <div class="hero-buttons">
-                <a href="#" class="btn btn-register" style="padding: 16px 32px; font-size: 1.1rem;">Comenzar ahora</a>
-                <a href="#features" class="btn btn-login" style="padding: 16px 32px; font-size: 1.1rem;">Conoce la plataforma</a>
+            <p style="max-width: 750px; margin: 0 auto 3rem auto;">NovaDesk es el hub definitivo para estudiantes. Clasifica tus apuntes, gestiona tus materias y utiliza nuestro Asistente Inteligente para convertir horas de lectura en minutos de comprensión pura.</p>
+            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#" class="btn btn-register" style="padding: 16px 36px; font-size: 1.1rem;">Comenzar ahora</a>
+                <a href="#about" class="btn btn-login" style="padding: 16px 36px; font-size: 1.1rem;">Conoce la plataforma</a>
             </div>
         </div>
     </section>
 
+    <!-- ACERCA DE (CON MOCKUP 3D) -->
     <section id="about" class="grid-2">
         <div class="reveal">
-            <h2>Organización visual,<br>sin distracciones.</h2>
-            <p>Se acabó perder PDFs entre carpetas en la nube. NovaDesk estructura tu cuatrimestre de manera intuitiva. Cada carrera tiene su espacio, cada materia tiene su portada y cada apunte se guarda automáticamente con tecnología *Cloud-Sync*.</p>
+            <h2>Organización visual,<br>cero estrés.</h2>
+            <p>NovaDesk estructura tu cuatrimestre de manera impecable. Cada carrera tiene su espacio, cada materia tiene su portada y cada apunte se sincroniza en milisegundos con tecnología Cloud-Sync.</p>
             <ul style="list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 1.2rem; color: var(--text-main);">
-                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;">
-                    <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
-                    Gestión inteligente de carreras
+                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;" class="reveal delay-1">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
+                    Gestión inteligente multicarrera
                 </li>
-                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;">
-                    <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
-                    Editor enriquecido con auto-guardado
+                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;" class="reveal delay-2">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
+                    Editor dinámico que limpia código basura
                 </li>
-                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;">
-                    <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
-                    Modo Presentación y Modo Foco
+                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;" class="reveal delay-3">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
+                    Modo Presentación Inmersivo
                 </li>
             </ul>
         </div>
         
-        <div class="mockup-container reveal">
+        <div class="mockup-container reveal delay-2">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1rem;">
-                <h3 style="font-size: 1.2rem; font-weight: 800;">Tus Carreras</h3>
+                <h3 style="font-size: 1.2rem; font-weight: 800;">Dashboard</h3>
                 <div style="display: flex; gap: 8px;">
-                    <div style="width: 35px; height: 35px; border-radius: 50%; background: #f0f0f0;"></div>
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: #f0f0f0; border: 1px solid #e5e5e5;"></div>
                 </div>
             </div>
             
-            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                <div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;"><i class="bi bi-mortarboard text-muted"></i></div>
-                <div>
-                    <h4 style="font-weight: 700; margin-bottom: 2px;">Tecnicatura en Alimentos</h4>
-                    <span style="font-size: 0.8rem; color: var(--primary); font-weight: 700; background: rgba(0,122,255,0.1); padding: 2px 8px; border-radius: 6px;">Carrera Activa</span>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding: 10px; background: rgba(0,122,255,0.03); border-radius: 16px;">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: #fff; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;"><i class="bi bi-mortarboard-fill text-primary" style="font-size: 1.5rem;"></i></div>
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h4 style="font-weight: 800; margin-bottom: 2px;">Tecnicatura Superior</h4>
+                    <span style="font-size: 0.75rem; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">En curso</span>
                 </div>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
-                <div style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 1rem;">
-                    <div style="height: 60px; background: linear-gradient(135deg, var(--primary), var(--purple)); border-radius: 8px; margin-bottom: 1rem;"></div>
-                    <div style="font-weight: 700; font-size: 0.9rem;">Química Biológica</div>
+                <div style="background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-radius: 16px; padding: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="height: 70px; background: linear-gradient(135deg, var(--primary), var(--purple)); border-radius: 10px; margin-bottom: 1rem; position: relative; overflow: hidden;">
+                        <i class="bi bi-book-half" style="position: absolute; bottom: -10px; right: -5px; font-size: 4rem; color: rgba(255,255,255,0.2);"></i>
+                    </div>
+                    <div style="font-weight: 800; font-size: 0.95rem;">Química Biológica</div>
                 </div>
-                <div style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 1rem;">
-                    <div style="height: 60px; background: linear-gradient(135deg, var(--accent), #00c6ff); border-radius: 8px; margin-bottom: 1rem;"></div>
-                    <div style="font-weight: 700; font-size: 0.9rem;">Procesos Industriales</div>
+                <div style="background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-radius: 16px; padding: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="height: 70px; background: linear-gradient(135deg, var(--accent), #00c6ff); border-radius: 10px; margin-bottom: 1rem; position: relative; overflow: hidden;">
+                         <i class="bi bi-calculator" style="position: absolute; bottom: -10px; right: -5px; font-size: 4rem; color: rgba(255,255,255,0.2);"></i>
+                    </div>
+                    <div style="font-weight: 800; font-size: 0.95rem;">Física II</div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- HERRAMIENTAS IA -->
     <section id="features" style="text-align: center;">
         <h2 class="reveal">Arsenal de <span class="text-gradient">Productividad</span></h2>
         <p class="reveal" style="margin: 0 auto; max-width: 650px;">El ecosistema perfecto para que dejes de luchar contra tus apuntes y empieces a dominarlos de forma eficiente.</p>
         
         <div class="grid-3">
-            <div class="glass-panel reveal" style="text-align: left;">
-                <div class="feature-icon" style="color: var(--purple);">
+            <div class="glass-panel tilt reveal delay-1" style="text-align: left;">
+                <div style="width: 60px; height: 60px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin-bottom: 1.5rem; background: #fff; box-shadow: 0 10px 25px rgba(175, 82, 222, 0.2); color: var(--purple);">
                     <i class="bi bi-robot"></i>
                 </div>
-                <h3 style="font-weight: 800; font-size: 1.3rem;">Copiloto de Estudio IA</h3>
-                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Un asistente integrado listo para explicarte conceptos técnicos en segundos, generar flashcards automáticamente y tomar pruebas de tus propios textos.</p>
+                <h3 style="font-weight: 800; font-size: 1.3rem;">Copiloto de Estudio</h3>
+                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Asistente integrado listo para explicarte conceptos en segundos, formatear textos automáticos y tomar pruebas (quizzes) de tus propios apuntes.</p>
             </div>
             
-            <div class="glass-panel reveal" style="text-align: left; transform: translateY(-15px);">
-                <div class="feature-icon" style="color: var(--accent);">
+            <div class="glass-panel tilt reveal delay-2" style="text-align: left;">
+                <div style="width: 60px; height: 60px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin-bottom: 1.5rem; background: #fff; box-shadow: 0 10px 25px rgba(52, 199, 89, 0.2); color: var(--accent);">
                     <i class="bi bi-stopwatch-fill"></i>
                 </div>
-                <h3 style="font-weight: 800; font-size: 1.3rem;">Método Pomodoro Nativo</h3>
-                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Gestiona tu energía, no solo tu tiempo. Un widget Pomodoro integrado en tu barra superior te ayuda a mantener la concentración sin distracciones externas.</p>
+                <h3 style="font-weight: 800; font-size: 1.3rem;">Focus & Pomodoro</h3>
+                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Gestiona tu energía. El widget Pomodoro integrado y el atajo "Modo Concentración" ocultan distracciones para un flujo de trabajo inquebrantable.</p>
             </div>
 
-            <div class="glass-panel reveal" style="text-align: left;">
-                <div class="feature-icon" style="color: var(--primary);">
-                    <i class="bi bi-file-earmark-pdf-fill"></i>
+            <div class="glass-panel tilt reveal delay-3" style="text-align: left;">
+                <div style="width: 60px; height: 60px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin-bottom: 1.5rem; background: #fff; box-shadow: 0 10px 25px rgba(0, 122, 255, 0.2); color: var(--primary);">
+                    <i class="bi bi-filetype-pdf"></i>
                 </div>
-                <h3 style="font-weight: 800; font-size: 1.3rem;">Exportación Inquebrantable</h3>
-                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Descarga tus resúmenes a PDF con un formato estructurado perfecto que jamás corta imágenes ni textos a la mitad. O si prefieres, escúchalos con nuestro lector de voz.</p>
+                <h3 style="font-weight: 800; font-size: 1.3rem;">Exportación Perfecta</h3>
+                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Nuestro algoritmo PDF evita cortes a la mitad en textos e imágenes. Además, cuenta con lectura de voz (Text-to-Speech) para repasar escuchando.</p>
             </div>
         </div>
     </section>
 
-    <section id="workflow" class="grid-2">
-        <div class="glass-panel reveal" style="background: #ffffff;">
-            <h3 style="margin-bottom: 1.5rem; color: var(--text-main); font-weight: 800;">Atajos Profesionales</h3>
-            <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px; color: var(--text-muted); font-weight: 500;">
-                <li style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px;">
-                    <span>Paleta de Comandos</span> <strong style="color: var(--primary); background: rgba(0,122,255,0.1); padding: 4px 10px; border-radius: 8px;">Ctrl + K</strong>
-                </li>
-                <li style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px;">
-                    <span>Sincronización en la Nube</span> <strong style="color: var(--primary); background: rgba(0,122,255,0.1); padding: 4px 10px; border-radius: 8px;">Ctrl + S</strong>
-                </li>
-                <li style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px;">
-                    <span>Modo Presentación</span> <strong style="color: var(--primary); background: rgba(0,122,255,0.1); padding: 4px 10px; border-radius: 8px;">Alt + M</strong>
-                </li>
-                <li style="display: flex; justify-content: space-between;">
-                    <span>Modo Concentración</span> <strong style="color: var(--primary); background: rgba(0,122,255,0.1); padding: 4px 10px; border-radius: 8px;">Alt + F</strong>
-                </li>
-            </ul>
-        </div>
-        <div class="reveal">
-            <h2>Diseñado para el <br>alto rendimiento.</h2>
-            <p>Un editor de texto avanzado que purifica el código basura al pegar, aplica coloración en tiempo real, permite un control visual de tus documentos con zoom responsivo y te empodera para sacar la mejor nota.</p>
-            <a href="#" class="btn btn-register" style="margin-top: 1rem;"><i class="bi bi-rocket-takeoff-fill"></i> Iniciar mi espacio ahora</a>
+    <!-- FAQ SECTION -->
+    <section id="faq">
+        <div class="grid-2" style="align-items: start;">
+            <div class="reveal">
+                <h2>Preguntas Frecuentes</h2>
+                <p>Resolvemos tus dudas rápidas para que puedas empezar a usar NovaDesk con total tranquilidad.</p>
+            </div>
+            <div class="reveal delay-1">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span>¿Es NovaDesk gratuito?</span>
+                        <i class="bi bi-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-content">
+                            Sí, NovaDesk ofrece una capa de uso 100% gratuita para estudiantes, dándote acceso a la gestión de carreras, editor de texto y sincronización básica.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span>¿Qué motor de Inteligencia Artificial utilizan?</span>
+                        <i class="bi bi-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-content">
+                            Nuestro "Copiloto de Estudio" está impulsado por la API oficial de Google Gemini, garantizando respuestas rápidas, contextuales y seguras sobre tus apuntes.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span>¿Mis apuntes están seguros?</span>
+                        <i class="bi bi-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-content">
+                            Totalmente. Utilizamos infraestructura de bases de datos cifradas en la nube (Cloud-Sync). Solo tú tienes acceso a tus documentos y materias mediante tus credenciales.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
+    <!-- LEGAL / DESCARGOS -->
+    <section id="legal" style="background: rgba(255,255,255,0.4); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <h2 class="reveal" style="text-align: center; margin-bottom: 3rem;">Avisos Legales</h2>
+            
+            <div class="legal-box reveal delay-1">
+                <h4>1. Limitación de Responsabilidad de la Inteligencia Artificial</h4>
+                <p>NovaDesk integra modelos de IA generativa (Google Gemini) para facilitar el estudio. Sin embargo, la Inteligencia Artificial puede sufrir "alucinaciones" (generar información inexacta o falsa). NovaBit Media Agency no se hace responsable por errores fácticos generados por el asistente. Todo contenido debe ser verificado por el usuario contra fuentes académicas oficiales.</p>
+            </div>
+            
+            <div class="legal-box reveal delay-2">
+                <h4>2. Integridad Académica y Uso Ético</h4>
+                <p>Nuestra plataforma está diseñada como una herramienta de apoyo para estructurar el aprendizaje y mejorar la comprensión. NovaDesk prohíbe explícitamente el uso de sus herramientas de IA para cometer fraude, plagio o cualquier violación de los códigos de ética de instituciones educativas.</p>
+            </div>
+
+            <div class="legal-box reveal delay-3">
+                <h4>3. Privacidad y Tratamiento de Datos</h4>
+                <p>Tus apuntes son de tu entera propiedad. NovaBit Media Agency no vende, alquila ni utiliza el contenido de tus documentos para entrenar modelos de IA públicos. Los datos se procesan exclusivamente en tiempo real para brindarte las respuestas que solicitas mediante el Copiloto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer>
-        <p>Powered by NovaBit Media Agency © All Rights Reserved</p>
+        <img src="https://i.imgur.com/MzOcfDS.png" alt="NovaDesk" style="height: 24px; margin-bottom: 15px; opacity: 0.5;">
+        <p>Powered by <span style="color: var(--primary);">NovaBit Media Agency</span> © 2026 All Rights Reserved.</p>
     </footer>
 
+    <!-- SCRIPTS -->
     <script>
-        // Animación suave de aparición al hacer scroll
+        // Animación de Navbar al hacer scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Revelado de elementos al hacer scroll (Staggered Fade In Up)
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
                 var windowHeight = window.innerHeight;
                 var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 120;
+                var elementVisible = 100; // Sensibilidad
                 if (elementTop < windowHeight - elementVisible) {
                     reveals[i].classList.add("active");
                 }
             }
         }
         window.addEventListener("scroll", reveal);
-        reveal(); // Inicializar
+        reveal(); // Disparar al inicio
+
+        // Lógica del Acordeón FAQ
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const body = item.querySelector('.faq-body');
+            
+            // Cerrar otros abiertos (opcional, para modo acordeón estricto)
+            const allItems = document.querySelectorAll('.faq-item');
+            allItems.forEach(i => {
+                if(i !== item && i.classList.contains('active')) {
+                    i.classList.remove('active');
+                    i.querySelector('.faq-body').style.maxHeight = null;
+                }
+            });
+
+            // Toggle actual
+            item.classList.toggle('active');
+            if (item.classList.contains('active')) {
+                body.style.maxHeight = body.scrollHeight + "px";
+            } else {
+                body.style.maxHeight = null;
+            }
+        }
     </script>
 </body>
 </html>
