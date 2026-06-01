@@ -251,6 +251,7 @@
         <div class="nav-links">
             <a href="#about" class="interactive-el">Plataforma</a>
             <a href="#features" class="interactive-el">Herramientas</a>
+            <a href="#blog" class="interactive-el">Novedades</a>
             <a href="#faq" class="interactive-el">FAQ</a>
             <a href="#legal" class="interactive-el">Legal</a>
         </div>
@@ -433,7 +434,72 @@
             </div>
         </div>
     </section>
+<!-- BLOG / NOVEDADES -->
+    <section id="blog" style="background: #ffffff; position: relative;">
+        <div style="max-width: 1000px; margin: 0 auto; width: 100%;">
+            <div class="reveal" style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="margin-bottom: 1rem;">Novedades y Actualizaciones</h2>
+                <p>Descubre las últimas mejoras, parches y herramientas añadidas a NovaDesk.</p>
+            </div>
+            
+            <!-- Contenedor dinámico donde Firebase inyectará los posts -->
+            <div id="blog-public-container" style="display: flex; flex-direction: column; gap: 2rem;">
+                <div style="text-align: center; color: var(--text-muted);"><div class="spinner-border text-primary" role="status"></div> Cargando historial...</div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Script de Firebase para leer el blog en la web pública -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar Firebase (Solo lectura para esta vista)
+            const firebaseConfigPublic = {
+                apiKey: "AIzaSyCtMP_qBd_sj0W-30gZ_RcwmQc4tWyAEV4",
+                authDomain: "novadesk-6ef66.firebaseapp.com",
+                databaseURL: "https://novadesk-6ef66-default-rtdb.firebaseio.com",
+                projectId: "novadesk-6ef66"
+            };
+            if (!firebase.apps.length) { firebase.initializeApp(firebaseConfigPublic); }
+            const dbPublic = firebase.database();
+
+            // Escuchar cambios en tiempo real
+            dbPublic.ref('landing_blog').orderByChild('timestamp').on('value', (snap) => {
+                const contenedor = document.getElementById('blog-public-container');
+                contenedor.innerHTML = '';
+                if(snap.exists()){
+                    let posts = [];
+                    snap.forEach(child => { posts.push(child.val()); });
+                    
+                    posts.reverse().forEach((post, index) => {
+                        // Animación en cascada para cada post
+                        let delay = index * 0.1;
+                        contenedor.innerHTML += `
+                            <div class="glass-panel interactive-el" style="padding: 2.5rem; text-align: left; animation: slideUp 0.6s ease ${delay}s both;">
+                                <div style="display: inline-block; padding: 4px 12px; background: rgba(0,122,255,0.1); color: var(--primary); border-radius: 50px; font-size: 0.8rem; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase;">
+                                    ${post.etiqueta}
+                                </div>
+                                <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem;">${post.titulo}</h3>
+                                <div style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 1.5rem;">
+                                    <i class="bi bi-calendar3"></i> Publicado el ${post.fecha}
+                                </div>
+                                <p style="font-size: 1.05rem; color: var(--text-main); margin: 0;">${post.contenido}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    contenedor.innerHTML = "<div class='glass-panel' style='text-align:center;'>Aún no hay notas de actualización. ¡Mantente atento!</div>";
+                }
+            });
+        });
+    </script>
+
+    <style>
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    
+    
     <!-- FOOTER -->
     <footer>
         <img src="https://i.imgur.com/MzOcfDS.png" alt="NovaDesk" style="height: 28px; margin-bottom: 20px; opacity: 0.7;">
