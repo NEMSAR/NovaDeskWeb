@@ -6,8 +6,10 @@
     <title>NovaDesk | CMS Blog Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Firebase SDKs -->
+    
+    <!-- Firebase SDKs completos -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <style>
@@ -15,21 +17,20 @@
             --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
             --text-main: #1d1d1f; --text-muted: #86868b;
             --primary: #007aff; --danger: #ff3b30;
-            --glass-bg: rgba(255, 255, 255, 0.8);
-            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.8); --glass-border: rgba(255, 255, 255, 0.9);
             --shadow-glass: 0 16px 40px rgba(0, 0, 0, 0.04);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg-gradient); color: var(--text-main); padding: 3rem 5%; }
+        body { background: var(--bg-gradient); color: var(--text-main); padding: 3rem 5%; min-height: 100vh;}
         
-        .header { text-align: center; margin-bottom: 3rem; }
+        .header { text-align: center; margin-bottom: 2rem; }
         .header h1 { font-size: 2.5rem; font-weight: 800; }
         
         .glass-panel {
             background: var(--glass-bg); backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border); border-radius: 24px;
             padding: 2.5rem; box-shadow: var(--shadow-glass);
-            max-width: 800px; margin: 0 auto 3rem auto;
+            max-width: 800px; margin: 0 auto 2rem auto;
         }
 
         .input-group { margin-bottom: 1.5rem; }
@@ -40,7 +41,7 @@
             font-size: 1rem; color: var(--text-main); outline: none; transition: 0.3s;
         }
         .input-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(0,122,255,0.1); }
-        textarea.input-control { min-height: 150px; resize: vertical; }
+        textarea.input-control { min-height: 180px; resize: vertical; }
 
         .btn {
             padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;
@@ -57,101 +58,146 @@
             padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
-        .post-meta { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
         .post-title { font-weight: 800; font-size: 1.1rem; }
+
+        /* Vistas */
+        #login-view { display: block; max-width: 400px; margin: 10vh auto; }
+        #cms-view { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1><i class="bi bi-gear-fill text-primary"></i> CMS NovaDesk</h1>
-        <p>Centro de publicaciones para actualizaciones.</p>
-    </div>
-
-    <div class="glass-panel">
-        <h2 style="margin-bottom: 1.5rem; font-weight: 800;">Nueva Publicación</h2>
-        <form id="blog-form">
+    <!-- VISTA DE LOGIN -->
+    <div id="login-view" class="glass-panel">
+        <div class="header">
+            <h1>CMS Admin</h1>
+            <p>Inicia sesión para publicar</p>
+        </div>
+        <form id="login-form">
             <div class="input-group">
-                <label>Título de la actualización</label>
-                <input type="text" id="post-title" class="input-control" placeholder="Ej: NovaDesk v2.0 - Nuevas integraciones IA" required>
+                <input type="email" id="admin-email" class="input-control" placeholder="Correo administrador" required>
             </div>
             <div class="input-group">
-                <label>Etiqueta / Categoría</label>
-                <input type="text" id="post-tag" class="input-control" placeholder="Ej: Nueva Función, Parche, Anuncio" required>
+                <input type="password" id="admin-pass" class="input-control" placeholder="Contraseña" required>
             </div>
-            <div class="input-group">
-                <label>Contenido (Soporta HTML básico como &lt;b&gt;, &lt;br&gt;)</label>
-                <textarea id="post-content" class="input-control" placeholder="Escribe los detalles aquí..." required></textarea>
-            </div>
-            <button type="submit" class="btn" id="btn-submit"><i class="bi bi-send-fill"></i> Publicar en la Web</button>
+            <button type="submit" class="btn" id="btn-login">Ingresar</button>
         </form>
     </div>
 
-    <h2 style="text-align: center; margin-bottom: 1.5rem; font-weight: 800;">Publicaciones Activas</h2>
-    <div class="post-list" id="post-list">
-        <!-- Las publicaciones aparecerán aquí -->
+    <!-- VISTA DEL CMS -->
+    <div id="cms-view">
+        <div class="header">
+            <h1><i class="bi bi-gear-fill text-primary"></i> CMS NovaDesk</h1>
+            <p>Centro de publicaciones para actualizaciones.</p>
+            <button onclick="firebase.auth().signOut()" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:bold; margin-top:10px;">Cerrar Sesión</button>
+        </div>
+
+        <div class="glass-panel">
+            <h2 style="margin-bottom: 1.5rem; font-weight: 800;">Nueva Publicación</h2>
+            <form id="blog-form">
+                <div class="input-group">
+                    <label>Título de la actualización</label>
+                    <input type="text" id="post-title" class="input-control" placeholder="Ej: NUEVOS TAGS DE ESTADOS" required>
+                </div>
+                <div class="input-group">
+                    <label>Etiqueta / Categoría</label>
+                    <input type="text" id="post-tag" class="input-control" placeholder="Ej: Nueva Función" required>
+                </div>
+                <div class="input-group">
+                    <label>Contenido (Soporta [img]url[/img] y saltos de línea)</label>
+                    <textarea id="post-content" class="input-control" placeholder="Escribe los detalles aquí..." required></textarea>
+                </div>
+                <button type="submit" class="btn" id="btn-submit"><i class="bi bi-send-fill"></i> Publicar en la Web</button>
+            </form>
+        </div>
+
+        <h2 style="text-align: center; margin-bottom: 1.5rem; font-weight: 800;">Historial de Publicaciones</h2>
+        <div class="post-list" id="post-list"></div>
     </div>
 
     <script>
-        // Bloqueo simple de seguridad
-        if(prompt("Ingresa la clave de administrador:") !== "Nova2026") {
-            document.body.innerHTML = "<h1 style='text-align:center; margin-top: 5rem;'>Acceso Denegado.</h1>";
-        } else {
-            // Inicialización de Firebase con tus credenciales
-            const firebaseConfig = {
-                apiKey: "AIzaSyCtMP_qBd_sj0W-30gZ_RcwmQc4tWyAEV4",
-                authDomain: "novadesk-6ef66.firebaseapp.com",
-                databaseURL: "https://novadesk-6ef66-default-rtdb.firebaseio.com",
-                projectId: "novadesk-6ef66"
-            };
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.database();
+        // Inicialización de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtMP_qBd_sj0W-30gZ_RcwmQc4tWyAEV4",
+            authDomain: "novadesk-6ef66.firebaseapp.com",
+            databaseURL: "https://novadesk-6ef66-default-rtdb.firebaseio.com",
+            projectId: "novadesk-6ef66"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
 
-            // Guardar nueva publicación
-            document.getElementById('blog-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit');
-                btn.innerHTML = "Publicando..."; btn.disabled = true;
+        // Control de Sesión
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('login-view').style.display = 'none';
+                document.getElementById('cms-view').style.display = 'block';
+                cargarPosts();
+            } else {
+                document.getElementById('login-view').style.display = 'block';
+                document.getElementById('cms-view').style.display = 'none';
+            }
+        });
 
-                const nuevoPost = {
-                    titulo: document.getElementById('post-title').value,
-                    etiqueta: document.getElementById('post-tag').value,
-                    contenido: document.getElementById('post-content').value,
-                    fecha: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                };
-
-                db.ref('landing_blog').push(nuevoPost).then(() => {
-                    alert('¡Publicación exitosa!');
-                    this.reset();
-                    btn.innerHTML = '<i class="bi bi-send-fill"></i> Publicar en la Web';
-                    btn.disabled = false;
+        // Login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login');
+            btn.innerHTML = "Autenticando..."; btn.disabled = true;
+            auth.signInWithEmailAndPassword(document.getElementById('admin-email').value, document.getElementById('admin-pass').value)
+                .catch(err => {
+                    alert("Error: " + err.message);
+                    btn.innerHTML = "Ingresar"; btn.disabled = false;
                 });
-            });
+        });
 
-            // Leer y mostrar publicaciones
+        // Guardar nueva publicación
+        document.getElementById('blog-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = "Publicando..."; btn.disabled = true;
+
+            const nuevoPost = {
+                titulo: document.getElementById('post-title').value,
+                etiqueta: document.getElementById('post-tag').value,
+                contenido: document.getElementById('post-content').value,
+                fecha: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            // AQUÍ AGREGAMOS EL .catch() PARA SABER SI FALLA
+            db.ref('landing_blog').push(nuevoPost).then(() => {
+                alert('¡Publicación exitosa!');
+                this.reset();
+                btn.innerHTML = '<i class="bi bi-send-fill"></i> Publicar en la Web';
+                btn.disabled = false;
+            }).catch(error => {
+                console.error(error);
+                alert("Error de Firebase: " + error.message);
+                btn.innerHTML = '<i class="bi bi-send-fill"></i> Publicar en la Web';
+                btn.disabled = false;
+            });
+        });
+
+        // Leer y mostrar publicaciones
+        function cargarPosts() {
             db.ref('landing_blog').orderByChild('timestamp').on('value', (snap) => {
                 const contenedor = document.getElementById('post-list');
                 contenedor.innerHTML = '';
                 if(snap.exists()){
                     let posts = [];
-                    snap.forEach(child => {
-                        posts.push({ id: child.key, ...child.val() });
-                    });
-                    // Invertir para mostrar lo más nuevo arriba
+                    snap.forEach(child => { posts.push({ id: child.key, ...child.val() }); });
                     posts.reverse().forEach(post => {
                         contenedor.innerHTML += `
                             <div class="post-item">
                                 <div>
-                                    <div class="post-meta">${post.fecha} • ${post.etiqueta}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">${post.fecha} • ${post.etiqueta}</div>
                                     <div class="post-title">${post.titulo}</div>
                                 </div>
                                 <button class="btn btn-danger" onclick="borrarPost('${post.id}')"><i class="bi bi-trash"></i> Borrar</button>
                             </div>
                         `;
                     });
-                } else {
-                    contenedor.innerHTML = "<p style='text-align:center; color:#86868b;'>No hay publicaciones aún.</p>";
                 }
             });
         }
@@ -159,7 +205,7 @@
         // Función para borrar
         window.borrarPost = function(id) {
             if(confirm('¿Seguro que deseas borrar esta publicación?')) {
-                firebase.database().ref('landing_blog/' + id).remove();
+                db.ref('landing_blog/' + id).remove();
             }
         }
     </script>
