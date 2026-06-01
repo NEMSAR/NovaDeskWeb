@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaDesk | Tu carrera, bajo control</title>
+    <title>NovaDesk | El futuro de la gestión académica</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
@@ -19,274 +19,225 @@
             --purple: #af52de;
             --danger: #ff3b30;
             
-            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-bg: rgba(255, 255, 255, 0.65);
             --glass-border: rgba(255, 255, 255, 0.9);
-            --glass-border-highlight: rgba(255, 255, 255, 1);
-            --shadow-glass: 0 12px 40px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 20px 50px rgba(0, 122, 255, 0.12);
+            --shadow-glass: 0 16px 40px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 25px 60px rgba(0, 122, 255, 0.1);
             --inner-glow: inset 0 1px 1px rgba(255,255,255,0.9), inset 1px 0 1px rgba(255,255,255,0.5);
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            /* Ocultar cursor por defecto para pantallas de escritorio */
+            cursor: none; 
         }
 
-        html {
-            scroll-behavior: smooth; /* Scroll suave nativo */
-        }
+        html { scroll-behavior: smooth; }
 
         body {
-            background-color: #f8fafc;
-            color: var(--text-main);
-            overflow-x: hidden;
-            line-height: 1.6;
-            position: relative;
+            background-color: #f8fafc; color: var(--text-main);
+            overflow-x: hidden; line-height: 1.6; position: relative;
         }
 
-        /* Patrón de fondo sutil (Grid) */
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--purple));
+            z-index: 9999; transition: width 0.1s ease-out;
+        }
+
+        /* Patrón Grid Subliminal */
         body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: 
                 linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
-            background-size: 30px 30px;
-            z-index: -2;
-            pointer-events: none;
+            background-size: 40px 40px; z-index: -2; pointer-events: none;
         }
 
-        /* ================= BLOBS FLOTANTES ================= */
-        .blob-1, .blob-2, .blob-3 {
-            position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.35; transition: 0.5s;
+        /* ================= BLOBS FLOTANTES & PARALLAX ================= */
+        .blob {
+            position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.35; 
+            transition: transform 0.2s ease-out; /* Para el parallax JS */
         }
-        .blob-1 { width: 45vw; height: 45vw; background: rgba(0, 122, 255, 0.6); top: -10%; left: -10%; animation: float 20s infinite ease-in-out alternate; }
-        .blob-2 { width: 35vw; height: 35vw; background: rgba(52, 199, 89, 0.4); bottom: -10%; right: -5%; animation: float 18s infinite ease-in-out alternate-reverse; }
-        .blob-3 { width: 30vw; height: 30vw; background: rgba(175, 82, 222, 0.3); top: 40%; left: 30%; animation: float 25s infinite ease-in-out alternate; }
-        
-        @keyframes float { 
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); } 
-            100% { transform: translate(40px, 60px) scale(1.1) rotate(10deg); } 
+        .blob-1 { width: 45vw; height: 45vw; background: rgba(0, 122, 255, 0.5); top: -10%; left: -10%; }
+        .blob-2 { width: 35vw; height: 35vw; background: rgba(52, 199, 89, 0.4); bottom: -10%; right: -5%; }
+        .blob-3 { width: 30vw; height: 30vw; background: rgba(175, 82, 222, 0.3); top: 30%; left: 35%; }
+
+        /* ================= CUSTOM CURSOR ================= */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 10000; pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--primary); transition: width 0.2s, height 0.2s; }
+        .cursor-outline { 
+            width: 40px; height: 40px; border: 2px solid rgba(0, 122, 255, 0.5); 
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+        }
+        /* Estado Hover del cursor */
+        .cursor-hover .cursor-dot { width: 0; height: 0; }
+        .cursor-hover .cursor-outline {
+            width: 60px; height: 60px; background-color: rgba(0, 122, 255, 0.1); border-color: transparent;
+            backdrop-filter: blur(2px);
         }
 
-        /* ================= COMPONENTES GLASSMORPHISM ================= */
+        /* ================= COMPONENTES GLASSMORPHISM AVANZADOS ================= */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(30px) saturate(150%);
-            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            backdrop-filter: blur(35px) saturate(180%);
+            -webkit-backdrop-filter: blur(35px) saturate(180%);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-highlight);
-            border-left: 1px solid var(--glass-border-highlight);
-            border-radius: 28px;
-            padding: 3rem;
+            border-radius: 28px; padding: 3rem;
             box-shadow: var(--shadow-glass), var(--inner-glow);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: perspective(1000px) rotateX(0) rotateY(0);
+            position: relative; overflow: hidden; /* Necesario para el resplandor interno */
         }
 
-        /* Efecto 3D Hover (Tilt) */
+        /* Mouse Tracking Glow Effect */
+        .glass-panel::before {
+            content: ""; position: absolute;
+            top: var(--mouse-y, -1000px); left: var(--mouse-x, -1000px);
+            transform: translate(-50%, -50%); width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.08) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 0;
+        }
+        .glass-panel:hover::before { opacity: 1; }
+        .glass-panel > * { position: relative; z-index: 1; } /* Asegura que el contenido quede arriba del brillo */
+
         .glass-panel.tilt:hover {
-            transform: perspective(1000px) translateY(-10px) rotateX(2deg) rotateY(2deg);
+            transform: translateY(-8px);
             box-shadow: var(--shadow-hover), var(--inner-glow);
-            border-color: rgba(0, 122, 255, 0.2);
+            border-color: rgba(0, 122, 255, 0.3);
         }
 
         .text-gradient {
-            background: linear-gradient(135deg, var(--primary), var(--purple));
+            background: linear-gradient(135deg, var(--primary), var(--purple), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 200% auto;
-            animation: shine 5s linear infinite;
+            animation: shine 6s linear infinite;
         }
+        @keyframes shine { to { background-position: 200% center; } }
 
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        /* ================= BOTONES ================= */
+        /* ================= BOTONES MAGNÉTICOS ================= */
         .btn {
-            padding: 14px 28px;
-            border-radius: 16px;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 1.05rem;
-            position: relative;
-            overflow: hidden;
+            padding: 14px 32px; border-radius: 16px; font-weight: 700;
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; font-size: 1.05rem; position: relative; overflow: hidden;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
         }
 
         .btn-login {
-            background: rgba(255, 255, 255, 0.8);
-            color: var(--text-main);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background: rgba(255, 255, 255, 0.9); color: var(--text-main);
+            border: 1px solid var(--glass-border); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             backdrop-filter: blur(10px);
         }
-
-        .btn-login:hover {
-            background: #ffffff;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            transform: translateY(-3px) scale(1.02);
-        }
+        .btn-login:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
 
         .btn-register {
-            background: var(--primary);
-            color: #ffffff;
-            border: none;
-            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
-            z-index: 1;
+            background: var(--primary); color: #ffffff; border: none;
+            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3); z-index: 1;
         }
-
-        /* Efecto de brillo interior en el botón */
         .btn-register::before {
             content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: all 0.5s ease; z-index: -1;
         }
         .btn-register:hover::before { left: 100%; }
-        .btn-register:hover {
-            box-shadow: 0 12px 35px rgba(0, 122, 255, 0.45);
-            transform: translateY(-3px) scale(1.03);
-        }
+        .btn-register:hover { box-shadow: 0 15px 35px rgba(0, 122, 255, 0.45); }
 
         /* ================= NAVEGACIÓN ================= */
         nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.2rem 5%;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.2rem 5%; position: fixed; width: 100%; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border-bottom: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 30px rgba(0,0,0,0.02);
             transition: all 0.4s ease;
         }
-
-        nav.scrolled {
-            padding: 0.8rem 5%;
-            background: rgba(255, 255, 255, 0.85);
-        }
-
+        nav.scrolled { padding: 0.8rem 5%; background: rgba(255, 255, 255, 0.85); border-bottom: 1px solid var(--glass-border); }
         .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
         
         .nav-links { display: flex; gap: 2.5rem; }
         .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; position: relative; }
-        
-        /* Subrayado animado nav */
         .nav-links a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
-            background-color: var(--primary); transition: width 0.3s ease;
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 50%;
+            background-color: var(--primary); transition: all 0.3s ease; transform: translateX(-50%);
         }
         .nav-links a:hover { color: var(--text-main); }
         .nav-links a:hover::after { width: 100%; }
-        
         .auth-buttons { display: flex; gap: 1rem; }
 
         /* ================= SECCIONES ================= */
-        section { padding: 9rem 5% 6rem 5%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
+        section { padding: 10rem 5% 6rem 5%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
         
-        h1 { font-size: 5rem; font-weight: 800; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -2px; color: var(--text-main); }
-        h2 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.2px; color: var(--text-main); }
-        p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2.5rem; font-weight: 500; }
+        h1 { font-size: 5.5rem; font-weight: 800; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -2.5px; color: var(--text-main); }
+        h2 { font-size: 3.8rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.5px; color: var(--text-main); }
+        p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2.5rem; font-weight: 500; }
 
-        /* Grids */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; margin-top: 3rem; }
 
-        /* Dashboard Mockup (Animado) */
+        /* Dashboard Mockup Premium */
         .mockup-container {
-            background: #ffffff; border-radius: 24px; padding: 1.5rem;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05);
-            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg) scale(0.95);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+            background: rgba(255,255,255,0.9); border-radius: 24px; padding: 1.5rem;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(255,255,255,1);
+            backdrop-filter: blur(20px);
+            transform: perspective(1200px) rotateY(-8deg) rotateX(5deg) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .mockup-container::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 24px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); pointer-events: none;
-        }
-        .mockup-container:hover { transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1); box-shadow: 0 40px 80px rgba(0, 122, 255, 0.15); }
+        .mockup-container:hover { transform: perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1); box-shadow: 0 50px 100px rgba(0, 122, 255, 0.12); }
 
         /* ================= FAQ ACORDEÓN ================= */
-        .faq-item {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            margin-bottom: 1rem;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .faq-item.active {
-            background: #ffffff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border-color: rgba(0, 122, 255, 0.3);
-        }
-        .faq-header {
-            padding: 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.1rem; color: var(--text-main);
-        }
-        .faq-icon {
-            font-size: 1.2rem; color: var(--primary); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .faq-item { background: rgba(255, 255, 255, 0.5); border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 1rem; overflow: hidden; transition: all 0.3s ease; }
+        .faq-item:hover { border-color: rgba(0, 122, 255, 0.2); }
+        .faq-item.active { background: #ffffff; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: rgba(0, 122, 255, 0.4); }
+        .faq-header { padding: 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.1rem; }
+        .faq-icon { font-size: 1.2rem; color: var(--primary); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .faq-item.active .faq-icon { transform: rotate(180deg); }
-        .faq-body {
-            max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .faq-content { padding: 0 1.5rem 1.5rem 1.5rem; color: var(--text-muted); font-weight: 500; font-size: 1rem; line-height: 1.7; }
 
         /* ================= SECCIÓN LEGAL ================= */
-        .legal-box {
-            background: rgba(0, 0, 0, 0.02);
-            border-left: 4px solid var(--primary);
-            padding: 1.5rem 2rem;
-            border-radius: 0 16px 16px 0;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-        }
-        .legal-box:hover { background: rgba(0, 122, 255, 0.05); transform: translateX(5px); }
+        .legal-box { background: rgba(0, 0, 0, 0.02); border-left: 4px solid var(--primary); padding: 1.5rem 2rem; border-radius: 0 16px 16px 0; margin-bottom: 1.5rem; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .legal-box::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(90deg, rgba(0,122,255,0.05), transparent); opacity: 0; transition: 0.3s; pointer-events: none; }
+        .legal-box:hover::before { opacity: 1; }
+        .legal-box:hover { transform: translateX(8px); }
         .legal-box h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main); }
         .legal-box p { font-size: 0.95rem; margin: 0; color: var(--text-muted); }
 
         /* ================= FOOTER ================= */
-        footer { text-align: center; padding: 3rem; border-top: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(30px); position: relative; z-index: 10; }
-        footer p { margin: 0; font-size: 0.9rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; }
-
+        footer { text-align: center; padding: 4rem 2rem 2rem 2rem; border-top: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(30px); position: relative; z-index: 10; }
+        
         /* ================= ANIMACIONES DE REVELADO ================= */
-        .reveal { opacity: 0; transform: translateY(50px) scale(0.98); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
-        /* Staggered delay classes */
-        .delay-1 { transition-delay: 0.1s; }
-        .delay-2 { transition-delay: 0.2s; }
-        .delay-3 { transition-delay: 0.3s; }
+        .reveal { opacity: 0; transform: translateY(60px) scale(0.95); filter: blur(5px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
 
         @media (max-width: 992px) {
-            h1 { font-size: 3.5rem; }
-            h2 { font-size: 2.8rem; }
+            h1 { font-size: 3.8rem; } h2 { font-size: 3rem; }
             .nav-links { display: none; }
             .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
-            section { padding: 7rem 5% 4rem 5%; min-height: auto; }
+            section { padding: 8rem 5% 4rem 5%; min-height: auto; }
+            .cursor-dot, .cursor-outline { display: none; } /* Ocultar cursor custom en móviles */
+            * { cursor: auto !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- BARRA DE PROGRESO DE LECTURA -->
+    <div id="scroll-progress"></div>
+
+    <!-- CURSOR PERSONALIZADO -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
     <!-- BLOBS DE FONDO -->
-    <div class="blob-1"></div>
-    <div class="blob-2"></div>
-    <div class="blob-3"></div>
+    <div class="blob blob-1" id="blob-1"></div>
+    <div class="blob blob-2" id="blob-2"></div>
+    <div class="blob blob-3" id="blob-3"></div>
 
     <!-- NAVEGACIÓN -->
     <nav id="navbar">
@@ -294,81 +245,84 @@
             <img src="https://i.imgur.com/MzOcfDS.png" alt="NovaDesk Logo" style="height: 32px;">
         </div>
         <div class="nav-links">
-            <a href="#about">Plataforma</a>
-            <a href="#features">Herramientas</a>
-            <a href="#faq">FAQ</a>
-            <a href="#legal">Legal</a>
+            <a href="#about" class="interactive-el">Plataforma</a>
+            <a href="#features" class="interactive-el">Herramientas</a>
+            <a href="#faq" class="interactive-el">FAQ</a>
+            <a href="#legal" class="interactive-el">Legal</a>
         </div>
         <div class="auth-buttons">
-            <a href="#" class="btn btn-login">Iniciar Sesión</a>
-            <a href="#" class="btn btn-register"><i class="bi bi-person-plus-fill"></i> Registrarse</a>
+            <a href="#" class="btn btn-login interactive-el btn-magnetic">Iniciar Sesión</a>
+            <a href="#" class="btn btn-register interactive-el btn-magnetic"><i class="bi bi-rocket-takeoff-fill"></i> Ingresar</a>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
     <section id="hero" style="text-align: center; align-items: center;">
         <div class="reveal">
-            <div style="display: inline-block; padding: 6px 18px; background: rgba(255,255,255,0.8); border: 1px solid var(--glass-border); border-radius: 50px; color: var(--text-main); font-weight: 700; font-size: 0.85rem; margin-bottom: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.05); backdrop-filter: blur(10px);">
-                <i class="bi bi-stars text-primary" style="margin-right: 5px;"></i> Impulsado por Google Gemini IA
+            <div class="interactive-el" style="display: inline-block; padding: 8px 24px; background: rgba(255,255,255,0.8); border: 1px solid var(--glass-border); border-radius: 50px; color: var(--text-main); font-weight: 700; font-size: 0.9rem; margin-bottom: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.05); backdrop-filter: blur(10px);">
+                <i class="bi bi-stars text-primary" style="margin-right: 5px;"></i> Impulsado por Inteligencia Artificial (Gemini)
             </div>
-            <h1>La excelencia académica,<br><span class="text-gradient">diseñada para ti.</span></h1>
-            <p style="max-width: 750px; margin: 0 auto 3rem auto;">NovaDesk es el hub definitivo para estudiantes. Clasifica tus apuntes, gestiona tus materias y utiliza nuestro Asistente Inteligente para convertir horas de lectura en minutos de comprensión pura.</p>
+            <h1>La excelencia académica,<br><span class="text-gradient">diseñada a tu medida.</span></h1>
+            <p style="max-width: 800px; margin: 0 auto 3.5rem auto;">La plataforma definitiva que fusiona la organización de tus materias con IA generativa. Gestiona tu carrera, documenta tus apuntes en tiempo real y deja que el Copiloto de Estudio optimice tu aprendizaje.</p>
             <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-                <a href="#" class="btn btn-register" style="padding: 16px 36px; font-size: 1.1rem;">Comenzar ahora</a>
-                <a href="#about" class="btn btn-login" style="padding: 16px 36px; font-size: 1.1rem;">Conoce la plataforma</a>
+                <a href="#" class="btn btn-register interactive-el btn-magnetic" style="padding: 18px 40px; font-size: 1.15rem;">Comenzar ahora</a>
+                <a href="#about" class="btn btn-login interactive-el btn-magnetic" style="padding: 18px 40px; font-size: 1.15rem;">Descubrir más</a>
             </div>
         </div>
     </section>
 
-    <!-- ACERCA DE (CON MOCKUP 3D) -->
+    <!-- ACERCA DE (CON MOCKUP REALISTA) -->
     <section id="about" class="grid-2">
         <div class="reveal">
             <h2>Organización visual,<br>cero estrés.</h2>
-            <p>NovaDesk estructura tu cuatrimestre de manera impecable. Cada carrera tiene su espacio, cada materia tiene su portada y cada apunte se sincroniza en milisegundos con tecnología Cloud-Sync.</p>
-            <ul style="list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 1.2rem; color: var(--text-main);">
-                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;" class="reveal delay-1">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
+            <p>NovaDesk mapea tu cerebro. Cada carrera tiene su espacio vital, cada materia su portada personalizada y cada línea de texto que escribas se respalda automáticamente mediante tecnología Cloud-Sync de alta velocidad.</p>
+            <ul style="list-style: none; margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; color: var(--text-main);">
+                <li style="display: flex; gap: 15px; align-items: center; font-weight: 700; font-size: 1.1rem;" class="reveal delay-1">
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.2);"><i class="bi bi-check-lg"></i></div>
                     Gestión inteligente multicarrera
                 </li>
-                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;" class="reveal delay-2">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
+                <li style="display: flex; gap: 15px; align-items: center; font-weight: 700; font-size: 1.1rem;" class="reveal delay-2">
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.2);"><i class="bi bi-check-lg"></i></div>
                     Editor dinámico que limpia código basura
                 </li>
-                <li style="display: flex; gap: 12px; align-items: center; font-weight: 600; font-size: 1.1rem;" class="reveal delay-3">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i class="bi bi-check-lg"></i></div>
-                    Modo Presentación Inmersivo
+                <li style="display: flex; gap: 15px; align-items: center; font-weight: 700; font-size: 1.1rem;" class="reveal delay-3">
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 122, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.2);"><i class="bi bi-check-lg"></i></div>
+                    Modo Concentración y Pomodoro integrados
                 </li>
             </ul>
         </div>
         
-        <div class="mockup-container reveal delay-2">
+        <div class="mockup-container interactive-el reveal delay-2">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1rem;">
-                <h3 style="font-size: 1.2rem; font-weight: 800;">Dashboard</h3>
-                <div style="display: flex; gap: 8px;">
-                    <div style="width: 35px; height: 35px; border-radius: 50%; background: #f0f0f0; border: 1px solid #e5e5e5;"></div>
+                <h3 style="font-size: 1.2rem; font-weight: 800; display:flex; align-items:center; gap: 8px;"><i class="bi bi-grid-1x2-fill text-primary"></i> Dashboard</h3>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">Estudiante</span>
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: #f0f0f0; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"></div>
                 </div>
             </div>
             
-            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding: 10px; background: rgba(0,122,255,0.03); border-radius: 16px;">
-                <div style="width: 50px; height: 50px; border-radius: 12px; background: #fff; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;"><i class="bi bi-mortarboard-fill text-primary" style="font-size: 1.5rem;"></i></div>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding: 12px; background: rgba(0,122,255,0.04); border-radius: 16px; border: 1px solid rgba(0,122,255,0.1);">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: #fff; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"><i class="bi bi-mortarboard-fill text-primary" style="font-size: 1.5rem;"></i></div>
                 <div style="display: flex; flex-direction: column; justify-content: center;">
-                    <h4 style="font-weight: 800; margin-bottom: 2px;">Tecnicatura Superior</h4>
-                    <span style="font-size: 0.75rem; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">En curso</span>
+                    <h4 style="font-weight: 800; margin-bottom: 2px; font-size: 0.95rem;">Tecnicatura Superior en Tecnología de los Alimentos</h4>
+                    <span style="font-size: 0.75rem; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Carrera Activa</span>
                 </div>
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
-                <div style="background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-radius: 16px; padding: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <div style="height: 70px; background: linear-gradient(135deg, var(--primary), var(--purple)); border-radius: 10px; margin-bottom: 1rem; position: relative; overflow: hidden;">
-                        <i class="bi bi-book-half" style="position: absolute; bottom: -10px; right: -5px; font-size: 4rem; color: rgba(255,255,255,0.2);"></i>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1.5rem;">
+                <div style="background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 18px; padding: 1.2rem;">
+                    <div style="height: 80px; background: linear-gradient(135deg, var(--primary), var(--purple)); border-radius: 12px; margin-bottom: 1.2rem; position: relative; overflow: hidden;">
+                        <i class="bi bi-virus" style="position: absolute; bottom: -10px; right: -5px; font-size: 4.5rem; color: rgba(255,255,255,0.2);"></i>
                     </div>
-                    <div style="font-weight: 800; font-size: 0.95rem;">Química Biológica</div>
+                    <div style="font-weight: 800; font-size: 1rem; margin-bottom: 4px;">Química Biológica</div>
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);"><span style="color:var(--accent);">●</span> Cursando</div>
                 </div>
-                <div style="background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-radius: 16px; padding: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <div style="height: 70px; background: linear-gradient(135deg, var(--accent), #00c6ff); border-radius: 10px; margin-bottom: 1rem; position: relative; overflow: hidden;">
-                         <i class="bi bi-calculator" style="position: absolute; bottom: -10px; right: -5px; font-size: 4rem; color: rgba(255,255,255,0.2);"></i>
+                <div style="background: #fff; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 18px; padding: 1.2rem;">
+                    <div style="height: 80px; background: linear-gradient(135deg, var(--accent), #00c6ff); border-radius: 12px; margin-bottom: 1.2rem; position: relative; overflow: hidden;">
+                         <i class="bi bi-shield-check" style="position: absolute; bottom: -10px; right: -5px; font-size: 4.5rem; color: rgba(255,255,255,0.2);"></i>
                     </div>
-                    <div style="font-weight: 800; font-size: 0.95rem;">Física II</div>
+                    <div style="font-weight: 800; font-size: 1rem; margin-bottom: 4px;">Bromatología y BPM</div>
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);"><span style="color:var(--accent);">●</span> Cursando</div>
                 </div>
             </div>
         </div>
@@ -380,28 +334,28 @@
         <p class="reveal" style="margin: 0 auto; max-width: 650px;">El ecosistema perfecto para que dejes de luchar contra tus apuntes y empieces a dominarlos de forma eficiente.</p>
         
         <div class="grid-3">
-            <div class="glass-panel tilt reveal delay-1" style="text-align: left;">
-                <div style="width: 60px; height: 60px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin-bottom: 1.5rem; background: #fff; box-shadow: 0 10px 25px rgba(175, 82, 222, 0.2); color: var(--purple);">
+            <div class="glass-panel tilt interactive-el reveal delay-1" style="text-align: left;">
+                <div style="width: 65px; height: 65px; border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 2rem; margin-bottom: 1.8rem; background: #fff; box-shadow: 0 12px 30px rgba(175, 82, 222, 0.2); color: var(--purple);">
                     <i class="bi bi-robot"></i>
                 </div>
-                <h3 style="font-weight: 800; font-size: 1.3rem;">Copiloto de Estudio</h3>
-                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Asistente integrado listo para explicarte conceptos en segundos, formatear textos automáticos y tomar pruebas (quizzes) de tus propios apuntes.</p>
+                <h3 style="font-weight: 800; font-size: 1.4rem;">Copiloto IA Integrado</h3>
+                <p style="font-size: 1.05rem; margin-top: 12px; margin-bottom: 0;">Selecciona un texto complejo y deja que Gemini lo explique. Genera automáticamente cuestionarios de práctica y formatea tus resúmenes con un clic.</p>
             </div>
             
-            <div class="glass-panel tilt reveal delay-2" style="text-align: left;">
-                <div style="width: 60px; height: 60px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin-bottom: 1.5rem; background: #fff; box-shadow: 0 10px 25px rgba(52, 199, 89, 0.2); color: var(--accent);">
+            <div class="glass-panel tilt interactive-el reveal delay-2" style="text-align: left;">
+                <div style="width: 65px; height: 65px; border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 2rem; margin-bottom: 1.8rem; background: #fff; box-shadow: 0 12px 30px rgba(52, 199, 89, 0.2); color: var(--accent);">
                     <i class="bi bi-stopwatch-fill"></i>
                 </div>
-                <h3 style="font-weight: 800; font-size: 1.3rem;">Focus & Pomodoro</h3>
-                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Gestiona tu energía. El widget Pomodoro integrado y el atajo "Modo Concentración" ocultan distracciones para un flujo de trabajo inquebrantable.</p>
+                <h3 style="font-weight: 800; font-size: 1.4rem;">Focus & Pomodoro</h3>
+                <p style="font-size: 1.05rem; margin-top: 12px; margin-bottom: 0;">Un widget Pomodoro que corre en segundo plano y atajos de teclado para ocultar toda la interfaz. Sumérgete en el Modo Concentración total.</p>
             </div>
 
-            <div class="glass-panel tilt reveal delay-3" style="text-align: left;">
-                <div style="width: 60px; height: 60px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin-bottom: 1.5rem; background: #fff; box-shadow: 0 10px 25px rgba(0, 122, 255, 0.2); color: var(--primary);">
+            <div class="glass-panel tilt interactive-el reveal delay-3" style="text-align: left;">
+                <div style="width: 65px; height: 65px; border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 2rem; margin-bottom: 1.8rem; background: #fff; box-shadow: 0 12px 30px rgba(0, 122, 255, 0.2); color: var(--primary);">
                     <i class="bi bi-filetype-pdf"></i>
                 </div>
-                <h3 style="font-weight: 800; font-size: 1.3rem;">Exportación Perfecta</h3>
-                <p style="font-size: 1rem; margin-top: 12px; margin-bottom: 0;">Nuestro algoritmo PDF evita cortes a la mitad en textos e imágenes. Además, cuenta con lectura de voz (Text-to-Speech) para repasar escuchando.</p>
+                <h3 style="font-weight: 800; font-size: 1.4rem;">Exportación Blindada</h3>
+                <p style="font-size: 1.05rem; margin-top: 12px; margin-bottom: 0;">Nuestro renderizador PDF de alta precisión asegura que tus cuadros e imágenes nunca se corten a la mitad. Incluye además lectura de voz (Text-to-Speech).</p>
             </div>
         </div>
     </section>
@@ -410,12 +364,11 @@
     <section id="faq">
         <div class="grid-2" style="align-items: start;">
             <div class="reveal">
-                <h2>Preguntas Frecuentes</h2>
-                <p>Resolvemos tus dudas rápidas para que puedas empezar a usar NovaDesk con total tranquilidad.</p>
+                <h2>Respuestas<br>rápidas.</h2>
+                <p>Todo lo que necesitas saber antes de dar el salto al nivel profesional del estudio universitario.</p>
             </div>
             <div class="reveal delay-1">
-                <!-- FAQ Item 1 -->
-                <div class="faq-item">
+                <div class="faq-item interactive-el">
                     <div class="faq-header" onclick="toggleFaq(this)">
                         <span>¿Es NovaDesk gratuito?</span>
                         <i class="bi bi-chevron-down faq-icon"></i>
@@ -426,27 +379,25 @@
                         </div>
                     </div>
                 </div>
-                <!-- FAQ Item 2 -->
-                <div class="faq-item">
+                <div class="faq-item interactive-el">
                     <div class="faq-header" onclick="toggleFaq(this)">
                         <span>¿Qué motor de Inteligencia Artificial utilizan?</span>
                         <i class="bi bi-chevron-down faq-icon"></i>
                     </div>
                     <div class="faq-body">
                         <div class="faq-content">
-                            Nuestro "Copiloto de Estudio" está impulsado por la API oficial de Google Gemini, garantizando respuestas rápidas, contextuales y seguras sobre tus apuntes.
+                            Nuestro "Copiloto de Estudio" procesa los prompts a través de la API oficial de Google Gemini, garantizando respuestas rápidas y contextuales sobre tus propios apuntes.
                         </div>
                     </div>
                 </div>
-                <!-- FAQ Item 3 -->
-                <div class="faq-item">
+                <div class="faq-item interactive-el">
                     <div class="faq-header" onclick="toggleFaq(this)">
-                        <span>¿Mis apuntes están seguros?</span>
+                        <span>¿Cómo funcionan los atajos (Paleta de Comandos)?</span>
                         <i class="bi bi-chevron-down faq-icon"></i>
                     </div>
                     <div class="faq-body">
                         <div class="faq-content">
-                            Totalmente. Utilizamos infraestructura de bases de datos cifradas en la nube (Cloud-Sync). Solo tú tienes acceso a tus documentos y materias mediante tus credenciales.
+                            Dentro de la plataforma puedes presionar <strong>Ctrl + K</strong> (o Cmd + K) para abrir la paleta flotante. Desde ahí puedes activar el modo oscuro, guardar, abrir la IA o exportar sin usar el ratón.
                         </div>
                     </div>
                 </div>
@@ -455,68 +406,138 @@
     </section>
 
     <!-- LEGAL / DESCARGOS -->
-    <section id="legal" style="background: rgba(255,255,255,0.4); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
-        <div style="max-width: 900px; margin: 0 auto;">
-            <h2 class="reveal" style="text-align: center; margin-bottom: 3rem;">Avisos Legales</h2>
+    <section id="legal" style="background: rgba(0,0,0,0.02); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+        <div style="max-width: 950px; margin: 0 auto;">
+            <h2 class="reveal" style="text-align: center; margin-bottom: 3.5rem;">Responsabilidad Legal</h2>
             
-            <div class="legal-box reveal delay-1">
+            <div class="legal-box interactive-el reveal delay-1">
                 <h4>1. Limitación de Responsabilidad de la Inteligencia Artificial</h4>
-                <p>NovaDesk integra modelos de IA generativa (Google Gemini) para facilitar el estudio. Sin embargo, la Inteligencia Artificial puede sufrir "alucinaciones" (generar información inexacta o falsa). NovaBit Media Agency no se hace responsable por errores fácticos generados por el asistente. Todo contenido debe ser verificado por el usuario contra fuentes académicas oficiales.</p>
+                <p>NovaDesk integra modelos de IA generativa para facilitar el análisis de textos. Sin embargo, los modelos de lenguaje pueden sufrir "alucinaciones" (generar datos inexactos). NovaBit Media Agency no se hace responsable por errores fácticos. El usuario asume la responsabilidad de verificar todo contenido con fuentes bibliográficas oficiales.</p>
             </div>
             
-            <div class="legal-box reveal delay-2">
-                <h4>2. Integridad Académica y Uso Ético</h4>
-                <p>Nuestra plataforma está diseñada como una herramienta de apoyo para estructurar el aprendizaje y mejorar la comprensión. NovaDesk prohíbe explícitamente el uso de sus herramientas de IA para cometer fraude, plagio o cualquier violación de los códigos de ética de instituciones educativas.</p>
+            <div class="legal-box interactive-el reveal delay-2">
+                <h4>2. Integridad Académica Institucional</h4>
+                <p>La plataforma es una herramienta de organización y soporte técnico. Queda terminantemente prohibido el uso del Copiloto IA integrado para la redacción de exámenes, cometer fraude, plagio o cualquier actividad que viole los reglamentos éticos de las instituciones educativas pertinentes.</p>
             </div>
 
-            <div class="legal-box reveal delay-3">
-                <h4>3. Privacidad y Tratamiento de Datos</h4>
-                <p>Tus apuntes son de tu entera propiedad. NovaBit Media Agency no vende, alquila ni utiliza el contenido de tus documentos para entrenar modelos de IA públicos. Los datos se procesan exclusivamente en tiempo real para brindarte las respuestas que solicitas mediante el Copiloto.</p>
+            <div class="legal-box interactive-el reveal delay-3">
+                <h4>3. Privacidad y Tratamiento de Información</h4>
+                <p>Tus apuntes son encriptados en nuestras bases de datos (Cloud-Sync). NovaBit Media Agency no vende, cede ni utiliza tu propiedad intelectual para entrenar modelos de IA públicos. El procesamiento de texto se realiza de forma efímera durante tu sesión activa.</p>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <img src="https://i.imgur.com/MzOcfDS.png" alt="NovaDesk" style="height: 24px; margin-bottom: 15px; opacity: 0.5;">
+        <img src="https://i.imgur.com/MzOcfDS.png" alt="NovaDesk" style="height: 28px; margin-bottom: 20px; opacity: 0.7;">
         <p>Powered by <span style="color: var(--primary);">NovaBit Media Agency</span> © 2026 All Rights Reserved.</p>
     </footer>
 
-    <!-- SCRIPTS -->
+    <!-- SCRIPTS ADVANCED -->
     <script>
-        // Animación de Navbar al hacer scroll
-        window.addEventListener('scroll', function() {
+        // 1. Barra de Progreso de Lectura
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+            
+            // Navbar Glass effect on scroll
             const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        };
 
-        // Revelado de elementos al hacer scroll (Staggered Fade In Up)
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100; // Sensibilidad
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                }
-            }
+        // 2. Custom Cursor Logic & Parallax Blobs
+        const cursorDot = document.getElementById("cursor-dot");
+        const cursorOutline = document.getElementById("cursor-outline");
+        const blobs = document.querySelectorAll('.blob');
+
+        // Solo ejecutar lógica de mouse en escritorio (prevenir bugs táctiles)
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener("mousemove", function(e) {
+                const posX = e.clientX;
+                const posY = e.clientY;
+
+                // Animación suave del outline
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                
+                // Efecto trailing (retraso sutil para el outline)
+                cursorOutline.animate({
+                    left: `${posX}px`, top: `${posY}px`
+                }, { duration: 250, fill: "forwards" });
+
+                // Parallax suave en blobs basado en la posición del ratón
+                let xOffset = (posX / window.innerWidth - 0.5) * 40;
+                let yOffset = (posY / window.innerHeight - 0.5) * 40;
+                
+                blobs[0].style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+                blobs[1].style.transform = `translate(${-xOffset * 1.5}px, ${-yOffset * 1.5}px)`;
+                blobs[2].style.transform = `translate(${xOffset * 0.5}px, ${-yOffset * 0.8}px)`;
+            });
+
+            // Expansión del cursor en elementos interactivos
+            const interactiveEls = document.querySelectorAll('.interactive-el, a, button');
+            interactiveEls.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    document.body.classList.add('cursor-hover');
+                });
+                el.addEventListener('mouseleave', () => {
+                    document.body.classList.remove('cursor-hover');
+                });
+            });
+
+            // Botones Magnéticos
+            const magneticBtns = document.querySelectorAll('.btn-magnetic');
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', function(e) {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    // Fuerza del imán (divide por un número mayor para menos fuerza)
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                });
+                btn.addEventListener('mouseleave', function() {
+                    btn.style.transform = `translate(0px, 0px)`;
+                });
+            });
+
+            // Mouse Tracking Glow interno en las tarjetas
+            document.querySelectorAll('.glass-panel').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
         }
-        window.addEventListener("scroll", reveal);
-        reveal(); // Disparar al inicio
 
-        // Lógica del Acordeón FAQ
+        // 3. Revelado de elementos al hacer scroll (Intersection Observer es más óptimo)
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOptions = {
+            threshold: 0.15, // Porcentaje del elemento visible para disparar
+            rootMargin: "0px 0px -50px 0px"
+        };
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target); // Solo animar una vez
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => revealOnScroll.observe(el));
+
+        // 4. Lógica del Acordeón FAQ Smooth
         function toggleFaq(element) {
             const item = element.parentElement;
             const body = item.querySelector('.faq-body');
             
-            // Cerrar otros abiertos (opcional, para modo acordeón estricto)
-            const allItems = document.querySelectorAll('.faq-item');
-            allItems.forEach(i => {
+            // Cerrar otros (Acordeón estricto)
+            document.querySelectorAll('.faq-item').forEach(i => {
                 if(i !== item && i.classList.contains('active')) {
                     i.classList.remove('active');
                     i.querySelector('.faq-body').style.maxHeight = null;
